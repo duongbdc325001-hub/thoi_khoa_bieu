@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thời Khóa Biểu Toàn Trường (Sáng & Chiều) - K10, K11, K12</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    body {
+      padding: 20px;
+      background-color: #f1f5f9;
+      color: #1e293b;
+      margin: 0;
+    }
+    .container {
+      max-width: 1150px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      color: #1e3a8a;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .sub-title {
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+      margin-top: -8px;
+      margin-bottom: 20px;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #334155;
+    }
+    input[type="text"], select {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+    }
+    input[type="text"] {
+      width: 180px;
+    }
+    select {
+      min-width: 250px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .stats {
+      margin-left: auto;
+      font-weight: 700;
+      color: #1d4ed8;
+      background: #eff6ff;
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid #bfdbfe;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      text-align: center;
+      padding: 6px;
+      height: 50px;
+      vertical-align: middle;
+    }
+    th {
+      background-color: #1e3a8a;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .session-separator {
+      background-color: #f1f5f9;
+      font-weight: bold;
+      color: #475569;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .tiet-col {
+      background-color: #f8fafc;
+      font-weight: bold;
+      width: 85px;
+      color: #475569;
+      font-size: 13px;
+    }
+    .cell-occupied {
+      background-color: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      border-radius: 6px;
+      padding: 4px 6px;
+      margin: 2px 0;
+      text-align: center;
+    }
+    .cell-afternoon {
+      background-color: #fef3c7;
+      border-color: #fcd34d;
+    }
+    .cell-afternoon .cell-subject {
+      color: #b45309;
+    }
+    .cell-subject {
+      font-weight: 700;
+      color: #0369a1;
+      font-size: 13px;
+    }
+    .cell-class {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-top: 2px;
+    }
+    .print-btn {
+      padding: 8px 16px;
+      background: #0284c7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .print-btn:hover {
+      background: #0369a1;
+    }
+    @media print {
+      body { background: white; padding: 0; }
+      .container { box-shadow: none; padding: 0; max-width: 100%; }
+      .toolbar, .sub-title { display: none !important; }
+      th { background-color: #333 !important; color: white !important; -webkit-print-color-adjust: exact; }
+      .cell-occupied { border: 1px solid #999 !important; background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1 id="pageHeading">Thời Khóa Biểu Giảng Dạy</h1>
+  <div class="sub-title">Năm học 2026 - 2027 • Tích hợp Buổi Sáng & Chiều (Khối 10, 11, 12)</div>
+
+  <div class="toolbar">
+    <div class="control-group">
+      <label for="searchInput">🔍 Tìm GV:</label>
+      <input type="text" id="searchInput" placeholder="Gõ tên để lọc...">
+    </div>
+
+    <div class="control-group">
+      <label for="teacherSelect">Chọn GV:</label>
+      <select id="teacherSelect">
+        <option value="">-- Đang nạp danh sách --</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <button class="print-btn" onclick="window.print()">🖨️ In Lịch</button>
+    </div>
+
+    <div class="stats" id="totalLessons">Tổng số tiết: 0</div>
+  </div>
+
+  <table id="scheduleTable">
+    <thead>
+      <tr>
+        <th class="tiet-col">Buổi / Tiết</th>
+        <th>Thứ 2</th>
+        <th>Thứ 3</th>
+        <th>Thứ 4</th>
+        <th>Thứ 5</th>
+        <th>Thứ 6</th>
+        <th>Thứ 7</th>
+      </tr>
+    </thead>
+    <tbody id="scheduleBody"></tbody>
+  </table>
+</div>
+
+<script>
+// Nạp toàn bộ dữ liệu 6 file (Sáng + Chiều của 3 Khối)
+const rawDataFiles = [
+  // 1. SÁNG K10
+`"THỜI KHÓA BIỂU KHỐI 10, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,,LẦN 1
+BUỐI SÁNG,,,,,,,,,,,,,,,,
+Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,,
+CHỦ NHIỆM,,N.N. Xuân,N.T. Long,N.M. Loan,V.T.P. Thảo,Đ.T.L. Anh,L.T. Nghĩa,N.G. Hương,N.K. Thủy,N.T.N. Hà,V.X. Thanh,H.H. Hà,N.T.T. Hường,N.T.B. Hòa,Đ.T.H. Nhung,N.T.L. Anh
+Thứ,Tiết,10T1,10T2,10L,10H,10S,10TIN,10V1,10V2,10SỬ,10Đ,10A1,10A2,10P,10N,10TQ
+Thứ 2,1,TrN - T.T.T.Hà,TrN - N.T.M.Nguyệt,TrN - B.T.T.Ngân,TrN - B.M.Tuấn,TrN - Đ.T.L.Anh,TrN - N.T.T.Hoan,TrN - P.N.L.Hương,TrN - Đ.T.T.Hằng,TrN - N.P.Thành,TrN - L.T.T.Oanh,TrN - Đ.T.Hường,TrN - L.T.Nghĩa,TrN - P.T.Nga,TrN - B.T.Hiền,TrN - B.T.T.Cúc
+,2,TrN - T.T.T.Hà,TrN - N.T.M.Nguyệt,TrN - B.T.T.Ngân,TrN - B.M.Tuấn,TrN - Đ.T.L.Anh,TrN - N.T.T.Hoan,TrN - P.N.L.Hương,TrN - Đ.T.T.Hằng,TrN - N.P.Thành,TrN - L.T.T.Oanh,TrN - Đ.T.Hường,TrN - L.T.Nghĩa,TrN - P.T.Nga,TrN - B.T.Hiền,TrN - B.T.T.Cúc
+,3,Tin - N.T.Dũng,V - N.T.M.Anh,S - B.T.T.Ngân,QPAN - H.T.Hảo,V - N.P.Thành,T - L.T.Nghĩa,T - T.T.N.Quỳnh,Đ - B.T.T.Cúc,SU - V.T.H.Xiêm,GDĐP - P.T.M.Hòa,CN - P.Đ.Thắng,L - N.T.T.Hoan,V - P.T.Nga,V - L.T.Hường,CN - N.T.T.Vân
+,4,A - T.T.T.Hà,T - T.T.P.Thùy,Tin - N.T.Dũng,H - V.T.P.Thảo,T - P.T.B.Hiền,T - L.T.Nghĩa,S - L.T.K.Tuyến,V - N.K.Thủy,SU - V.T.H.Xiêm,T - Q.T.T.Quế,QPAN - N.V.Nam,CN - P.Đ.Thắng,V - P.T.Nga,V - L.T.Hường,TQ - N.T.L.Anh
+,5,A - T.T.T.Hà,T - T.T.P.Thùy,A - Đ.T.T.Mai,A - N.T.T.Huyền,T - P.T.B.Hiền,,QPAN - N.V.Nam,V - N.K.Thủy,QPAN - H.T.Hảo,T - Q.T.T.Quế,SU - L.T.Vinh,GDĐP - P.T.M.Hòa,CN - P.Đ.Thắng,Tin - N.T.Dũng,TQ - N.T.L.Anh
+Thứ 3,1,Tin - N.T.Dũng,GDTC,GDTC,GDTC,GDTC,GDTC,A - P.N.L.Hương,Đ - B.T.T.Cúc,GDTC,A - L.T.T.Oanh,A - H.H.Hà,CN - P.Đ.Thắng,SU - N.N.Hà,H - L.H.Hà,GDTC
+,2,QPAN - V.C.Cường,Tin - N.T.Dũng,A - Đ.T.T.Mai,SU - T.M.Hạnh,H - H.N.Khánh,A - N.M.Tuấn,GDTC,GDTC,SU - N.N.Hà,GDTC,A - H.H.Hà,GDTC,GDTC,GDTC,Đ - B.T.T.Cúc
+,3,S - H.M.Linh,Tin - N.T.Dũng,L - N.M.Loan,T - B.T.Hương,H - H.N.Khánh,H - L.H.Hà,Đ - B.T.T.Cúc,S - L.T.K.Tuyến,SU - N.N.Hà,V - P.T.M.Hòa,CN - P.Đ.Thắng,A - N.M.Tuấn,T - Đ.H.Lan,CN - N.T.T.Vân,T - N.C.Tâm
+,4,T - B.Đ.Dương,T - N.T.Long,L - N.M.Loan,T - B.T.Hương,QPAN - H.T.Hảo,L - N.T.T.Hoan,Đ - B.T.T.Cúc,T - N.T.Thúy,S - L.T.K.Tuyến,V - P.T.M.Hòa,T - Đ.T.Hường,A - N.M.Tuấn,T - Đ.H.Lan,T - Q.T.T.Quế,T - N.C.Tâm
+,5,T - B.Đ.Dương,T - N.T.Long,,Tin - N.T.Dũng,S - Đ.T.L.Anh,QPAN - N.V.Nam,,QPAN - H.T.Hảo,A - L.T.T.Oanh,KTPL - L.T.H.Hạnh,T - Đ.T.Hường,SU - T.M.Hạnh,P - N.T.B.Hòa,T - Q.T.T.Quế,SU - N.N.Hà
+Thứ 4,1,L - P.Đ.Mẫn,A - Đ.T.T.Mai,L - N.M.Loan,H - L.H.Hà,A - N.T.T.Huyền,Tin - N.H.Thái,V - N.G.Hương,T - N.T.Thúy,V - N.P.Thành,Đ - V.X.Thanh,A - H.H.Hà,V - N.T.T.Hường,P - N.T.B.Hòa,CN - N.T.T.Vân,V - N.N.Thủy
+,2,A - T.T.T.Hà,S - B.T.T.Ngân,L - N.M.Loan,H - L.H.Hà,A - N.T.T.Huyền,Tin - N.H.Thái,V - N.G.Hương,T - N.T.Thúy,V - N.P.Thành,Đ - V.X.Thanh,V - N.P.Nga,V - N.T.T.Hường,P - N.T.B.Hòa,N - Đ.T.H.Nhung,V - N.N.Thủy
+,3,GDĐP - M.T.T.Ninh,SU - T.M.Hạnh,V - N.C.Nhung,V - N.T.T.Hường,L - B.M.Tuấn,S - B.T.T.Ngân,T - T.T.N.Quỳnh,Đ - B.T.T.Cúc,H - N.V.Thụ,S - L.T.K.Tuyến,V - N.P.Nga,A - T.T.T.Hà,CN - P.Đ.Thắng,N - Đ.T.H.Nhung,L - B.V.Đường
+,4,T - N.N.Xuân,L - P.H.Quang,V - N.C.Nhung,V - N.T.T.Hường,H - H.N.Khánh,S - B.T.T.Ngân,T - T.T.N.Quỳnh,V - N.K.Thủy,T - T.V.Hùng,SU - L.T.Vinh,T - Đ.T.Hường,A - T.T.T.Hà,Đ - B.T.T.Cúc,T - Q.T.T.Quế,L - B.V.Đường
+,5,T - N.N.Xuân,H - L.N.Thuyết,QPAN - H.T.Hảo,,GDĐP - M.T.T.Ninh,V - P.T.Nga,GDĐP - N.N.Thủy,V - N.K.Thủy,T - T.V.Hùng,H - N.V.Thụ,T - Đ.T.Hường,QPAN - V.C.Cường,Đ - B.T.T.Cúc,T - Q.T.T.Quế,
+Thứ 5,1,GDTC,T - N.T.Long,T - N.T.T.Hương,L - B.M.Tuấn,A - N.T.T.Huyền,Tin - N.H.Thái,V - N.G.Hương,KTPL - L.T.H.Hạnh,V - N.P.Thành,V - P.T.M.Hòa,GDTC,T - L.T.Nghĩa,T - Đ.H.Lan,H - L.H.Hà,Đ - B.T.T.Cúc
+,2,GDTC,T - N.T.Long,T - N.T.T.Hương,L - B.M.Tuấn,CN - P.Đ.Thắng,H - L.H.Hà,V - N.G.Hương,H - N.V.Thụ,V - N.P.Thành,V - P.T.M.Hòa,GDTC,T - L.T.Nghĩa,T - Đ.H.Lan,L - N.T.T.Hoan,L - B.V.Đường
+,3,H - L.H.Hà,A - Đ.T.T.Mai,S - B.T.T.Ngân,A - N.T.T.Huyền,CN - P.Đ.Thắng,GDĐP - M.T.T.Ninh,Đ - B.T.T.Cúc,H - N.V.Thụ,S - L.T.K.Tuyến,Đ - V.X.Thanh,GDĐP - P.T.M.Hòa,Đ - N.T.M.Nguyệt,L - B.T.Hiền,QPAN - H.T.Hảo,CN - N.T.T.Vân
+,4,V - P.T.M.Hòa,A - Đ.T.T.Mai,H - N.T.H.Lan,S - B.T.T.Ngân,V - N.P.Thành,L - N.T.T.Hoan,H - N.V.Thụ,A - N.T.T.Huyền,GDĐP - N.N.Thủy,S - L.T.K.Tuyến,Tin - N.T.Dũng,Đ - N.T.M.Nguyệt,V - P.T.Nga,Đ - B.T.T.Cúc,GDĐP - Đ.Q.Nga
+,5,,,H - N.T.H.Lan,GDĐP - M.T.T.Ninh,V - N.P.Thành,A - N.M.Tuấn,A - P.N.L.Hương,A - N.T.T.Huyền,Đ - N.T.M.Nguyệt,,L - B.T.Hiền,Tin - N.T.Dũng,V - P.T.Nga,Đ - B.T.T.Cúc,TQ - N.T.L.Anh
+Thứ 6,1,S - H.M.Linh,L - P.H.Quang,L - N.M.Loan,T - B.T.Hương,SU - T.M.Hạnh,L - N.T.T.Hoan,SU - V.T.H.Xiêm,KTPL - L.T.H.Hạnh,T - T.V.Hùng,A - L.T.T.Oanh,Đ - N.T.M.Nguyệt,V - N.T.T.Hường,Tin - N.T.Dũng,N - Đ.T.H.Nhung,QPAN - V.C.Cường
+,2,L - P.Đ.Mẫn,L - P.H.Quang,Tin - N.T.Dũng,T - B.T.Hương,L - B.M.Tuấn,SU - T.M.Hạnh,V - N.T.M.Anh,SU - V.T.H.Xiêm,Đ - N.T.M.Nguyệt,A - L.T.T.Oanh,L - B.T.Hiền,V - N.T.T.Hường,P - N.T.B.Hòa,N - Đ.T.H.Nhung,KTPL - V.T.Hiền
+,3,L - P.Đ.Mẫn,GDTC,GDTC,GDTC,GDTC,GDTC,V - N.T.M.Anh,SU - V.T.H.Xiêm,GDTC,SU - L.T.Vinh,L - B.T.Hiền,Tin - N.T.Dũng,P - N.T.B.Hòa,L - N.T.T.Hoan,GDTC
+,4,H - L.H.Hà,V - N.T.M.Anh,T - N.T.T.Hương,L - B.M.Tuấn,S - Đ.T.L.Anh,Tin - N.H.Thái,GDTC,GDTC,KTPL - V.T.Hiền,GDTC,Tin - N.T.Dũng,GDTC,GDTC,GDTC,V - N.N.Thủy
+,5,H - L.H.Hà,V - N.T.M.Anh,T - N.T.T.Hương,A - N.T.T.Huyền,S - Đ.T.L.Anh,Tin - N.H.Thái,KTPL - T.T.T.Huế,,,KTPL - L.T.H.Hạnh,,,,SU - T.M.Hạnh,V - N.N.Thủy
+Thứ 7,1,T - N.N.Xuân,GDĐP - M.T.T.Ninh,H - N.T.H.Lan,S - B.T.T.Ngân,T - P.T.B.Hiền,T - L.T.Nghĩa,A - P.N.L.Hương,V - Q.T.T.Phương,A - L.T.T.Oanh,QPAN - V.C.Cường,V - N.P.Nga,L - N.T.T.Hoan,L - B.T.Hiền,V - L.T.Hường,T - N.C.Tâm
+,2,T - N.N.Xuân,QPAN - N.V.Nam,A - Đ.T.T.Mai,Tin - N.T.Dũng,T - P.T.B.Hiền,T - L.T.Nghĩa,SU - V.T.H.Xiêm,V - Q.T.T.Phương,A - L.T.T.Oanh,H - N.V.Thụ,V - N.P.Nga,L - N.T.T.Hoan,L - B.T.Hiền,V - L.T.Hường,T - N.C.Tâm
+,3,V - P.T.M.Hòa,H - L.N.Thuyết,GDĐP - M.T.T.Ninh,V - N.T.T.Hường,S - B.T.T.Ngân,A - N.M.Tuấn,H - N.V.Thụ,S - L.T.K.Tuyến,KTPL - V.T.Hiền,T - Q.T.T.Quế,Đ - N.T.M.Nguyệt,A - T.T.T.Hà,Tin - N.T.Dũng,L - N.T.T.Hoan,TQ - N.T.L.Anh
+,4,V - P.T.M.Hòa,H - L.N.Thuyết,SU - T.M.Hạnh,H - V.T.P.Thảo,S - B.T.T.Ngân,V - P.T.Nga,S - L.T.K.Tuyến,GDĐP - N.N.Thủy,H - N.V.Thụ,Đ - V.X.Thanh,A - H.H.Hà,T - L.T.Nghĩa,QPAN - V.C.Cường,Tin - N.T.Dũng,TQ - N.T.L.Anh
+,5,SU - T.M.Hạnh,S - B.T.T.Ngân,V - N.C.Nhung,H - V.T.P.Thảo,,V - P.T.Nga,KTPL - T.T.T.Huế,A - N.T.T.Huyền,Đ - N.T.M.Nguyệt,Đ - V.X.Thanh,A - H.H.Hà,T - L.T.Nghĩa,GDĐP - Đ.Q.Nga,N - Đ.T.H.Nhung,KTPL - V.T.Hiền`,
+
+  // 2. SÁNG K11
+`"THỜI KHÓA BIỂU KHỐI 11, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,LẦN 1,
+BUỐI SÁNG,,,,,,,,,,,,,,,,
+Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,,
+CHỦ NHIỆM,,,B.T. Hương,P.Đ. Mẫn,N.T.H. Lan,N.T. Nhung,N.T.P. Loan,V.T. Hằng,V.T.P. Thảo,N.T.T. Trang,N.T.T. Hương,P.T. Minh,N.P. Nga,P.M. Anh,N.T. Hạnh,
+Thứ,Buổi,Tiết,11T,11L,11H,11S,11TIN,11V,11SỬ,11Đ,11A1,11A2,11P,11N,11TQ,
+Thứ 2,Sáng,1,TrN - P.T.Huệ,TrN - H.M.Linh,TrN - N.T.H.Lan,TrN - M.T.T.Ninh,TrN - B.V.Thiện,TrN - Đ.H.Lan,TrN - N.T.Thúy,TrN - P.Đ.Thắng,TrN - N.T.T.Hương,TrN - L.T.H.Hạnh,TrN - P.T.Nga,TrN - T.V.Hùng,TrN - N.T.Hòa,
+,,2,TrN - P.T.Huệ,TrN - H.M.Linh,TrN - N.T.H.Lan,TrN - M.T.T.Ninh,TrN - B.V.Thiện,TrN - Đ.H.Lan,TrN - N.T.Thúy,TrN - V.T.Hiền,TrN - N.T.T.Hương,TrN - H.T.Hảo,TrN - P.T.Nga,TrN - T.V.Hùng,TrN - N.T.Hòa,
+,,3,S - Đ.T.L.Anh,V - Đ.Q.Nga,T - Đ.T.Hường,S - N.T.Nhung,H - N.T.H.Lan,V - N.N.Thủy,GDĐP - B.Đ.Dương,KTPL - V.T.Hiền,L - B.V.Thiện,A - P.T.Minh,P - N.P.Nga,QPAN - N.V.Nam,L - T.T.T.Hương,
+,,4,Tin - Đ.T.T.Hằng,V - Đ.Q.Nga,T - Đ.T.Hường,L - T.T.T.Hương,T - N.T.P.Loan,V - N.N.Thủy,A - Đ.T.T.Mai,GDĐP - B.Đ.Dương,T - N.T.T.Hương,A - P.T.Minh,P - N.P.Nga,V - P.T.Nga,QPAN - V.C.Cường,
+,,5,H - P.T.Khuyên,QPAN - V.C.Cường,Tin - Đ.T.T.Hằng,H - V.T.P.Thảo,T - N.T.P.Loan,SU - V.T.H.Xiêm,Đ - N.M.Hùng,SU - N.T.H.Thanh,T - N.T.T.Hương,KTPL - L.T.H.Hạnh,,V - P.T.Nga,KTPL - V.T.Hiền,
+Thứ 3,Sáng,1,T - B.T.Hương,L - P.T.Huệ,L - T.T.T.Hương,T - T.T.P.Thùy,S - H.M.Linh,A - N.M.Tuấn,V - L.T.Nhung,QPAN - V.C.Cường,KTPL - V.T.Hiền,V - N.K.Thủy,P - N.P.Nga,SU - T.M.Hạnh,T - P.T.B.Hiền,
+,,2,T - B.T.Hương,L - P.T.Huệ,L - T.T.T.Hương,T - T.T.P.Thùy,S - H.M.Linh,KTPL - L.T.H.Hạnh,V - L.T.Nhung,CN - P.Đ.Thắng,KTPL - V.T.Hiền,V - N.K.Thủy,P - N.P.Nga,GDĐP - B.Đ.Dương,T - P.T.B.Hiền,
+,,3,GDTC,GDTC,GDTC,GDTC,GDTC,GDTC,GDTC,T - P.T.Ngân,QPAN - H.T.Hảo,A - P.T.Minh,KTPL - T.T.T.Huế,L - P.T.Huệ,Đ - N.T.Hoà,
+,,4,S - Đ.T.L.Anh,A - P.N.L.Hương,H - P.T.Khuyên,A - Đ.T.T.Mai,SU - T.M.Hạnh,CN - N.T.Tùng,KTPL - T.T.T.Huế,GDTC,GDTC,GDTC,GDTC,GDTC,GDTC,
+,,5,,,H - P.T.Khuyên,,,T - Đ.H.Lan,T - N.T.Thúy,,CN - N.T.Tùng,QPAN - V.C.Cường,Đ - N.T.Hoà,KTPL - T.T.T.Huế,,
+Thứ 4,Sáng,1,GDTC,GDTC,GDTC,GDTC,GDTC,GDTC,GDTC,Đ - N.T.T.Trang,L - B.V.Thiện,CN - P.Đ.Thắng,SU - T.M.Hạnh,N - P.M.Anh,TQ - N.T.Hạnh,
+,,2,L - P.T.Huệ,H - L.N.Thuyết,T - Đ.T.Hường,GDĐP - P.T.B.Hiền,T - N.T.P.Loan,Đ - N.M.Hùng,A - Đ.T.T.Mai,GDTC,GDTC,GDTC,GDTC,GDTC,GDTC,
+,,3,V - N.P.Thành,H - L.N.Thuyết,T - Đ.T.Hường,QPAN - H.T.Hảo,T - N.T.P.Loan,GDĐP - P.T.B.Hiền,A - Đ.T.T.Mai,A - N.T.T.Huyền,T - N.T.T.Hương,L - B.V.Thiện,V - P.T.Nga,Đ - N.T.Hoà,CN - N.T.Tùng,
+,,4,QPAN - H.T.Hảo,L - P.Đ.Mẫn,QPAN - N.V.Nam,SU - T.M.Hạnh,A - H.T.Sáu,V - V.T.Hằng,CN - P.Đ.Thắng,T - P.T.Ngân,T - N.T.T.Hương,A - P.T.Minh,V - P.T.Nga,Đ - N.T.Hoà,KTPL - V.T.Hiền,
+,,5,H - P.T.Khuyên,L - P.Đ.Mẫn,SU - T.M.Hạnh,CN - N.T.Tùng,L - B.V.Thiện,V - V.T.Hằng,CN - P.Đ.Thắng,T - P.T.Ngân,,A - P.T.Minh,P - N.P.Nga,L - P.T.Huệ,Đ - N.T.Hoà,
+Thứ 5,Sáng,1,A - N.M.Tuấn,A - P.N.L.Hương,A - N.T.T.Cảnh,S - H.M.Linh,A - H.T.Sáu,Tin - Đ.T.T.Hằng,T - N.T.Thúy,CN - P.Đ.Thắng,V - N.N.Thủy,T - L.Đ.Thọ,L - P.T.Huệ,T - T.V.Hùng,L - T.T.T.Hương,
+,,2,L - P.T.Huệ,T - N.N.Xuân,H - N.T.H.Lan,S - H.M.Linh,A - H.T.Sáu,A - N.M.Tuấn,T - N.T.Thúy,Đ - N.T.T.Trang,V - N.N.Thủy,T - L.Đ.Thọ,T - P.T.Ngân,T - T.V.Hùng,TQ - N.T.Hạnh,
+,,3,L - P.T.Huệ,T - N.N.Xuân,H - N.T.H.Lan,L - T.T.T.Hương,L - B.V.Thiện,A - N.M.Tuấn,Tin - Đ.T.T.Hằng,Đ - N.T.T.Trang,A - N.T.T.Cảnh,KTPL - L.T.H.Hạnh,T - P.T.Ngân,KTPL - T.T.T.Huế,TQ - N.T.Hạnh,
+,,4,T - Q.T.T.Quế,Tin - Đ.T.T.Hằng,V - M.T.T.Ninh,H - V.T.P.Thảo,Tin - L.T.Nam,KTPL - L.T.H.Hạnh,Đ - N.M.Hùng,V - Q.T.T.Phương,A - N.T.T.Cảnh,Đ - N.T.Hoà,KTPL - T.T.T.Huế,N - P.M.Anh,V - N.G.Hương,
+,,5,T - Q.T.T.Quế,,S - H.M.Linh,A - Đ.T.T.Mai,Tin - L.T.Nam,QPAN - H.T.Hảo,Đ - N.M.Hùng,V - Q.T.T.Phương,Đ - N.T.Hoà,L - B.V.Thiện,Tin - Đ.T.T.Hằng,N - P.M.Anh,V - N.G.Hương,
+Thứ 6,Sáng,1,V - N.P.Thành,L - P.Đ.Mẫn,L - T.T.T.Hương,T - T.T.P.Thùy,L - B.V.Thiện,T - Đ.H.Lan,SU - V.T.P.Thảo,A - N.T.T.Huyền,A - N.T.T.Cảnh,SU - N.N.Hà,GDĐP - B.Đ.Dương,N - P.M.Anh,T - P.T.B.Hiền,
+,,2,V - N.P.Thành,S - H.M.Linh,V - M.T.T.Ninh,T - T.T.P.Thùy,QPAN - V.C.Cường,T - Đ.H.Lan,SU - V.T.P.Thảo,Tin - Đ.T.T.Hằng,GDĐP - B.Đ.Dương,T - L.Đ.Thọ,V - P.T.Nga,N - P.M.Anh,T - P.T.B.Hiền,
+,,3,GDĐP - P.T.B.Hiền,V - Đ.Q.Nga,V - M.T.T.Ninh,H - V.T.P.Thảo,V - L.T.Nhung,V - V.T.Hằng,Tin - Đ.T.T.Hằng,KTPL - V.T.Hiền,SU - N.N.Hà,T - L.Đ.Thọ,V - P.T.Nga,T - T.V.Hùng,V - N.G.Hương,
+,,4,H - P.T.Khuyên,SU - T.M.Hạnh,Tin - Đ.T.T.Hằng,V - M.T.T.Ninh,GDĐP - P.T.B.Hiền,V - V.T.Hằng,KTPL - T.T.T.Huế,V - Q.T.T.Phương,CN - N.T.Tùng,L - B.V.Thiện,T - P.T.Ngân,T - T.V.Hùng,V - N.G.Hương,
+,,5,Tin - Đ.T.T.Hằng,A - P.N.L.Hương,,V - M.T.T.Ninh,Tin - L.T.Nam,SU - V.T.H.Xiêm,,V - Q.T.T.Phương,L - B.V.Thiện,,T - P.T.Ngân,,L - T.T.T.Hương,
+Thứ 7,Sáng,1,T - B.T.Hương,S - H.M.Linh,H - P.T.Khuyên,A - Đ.T.T.Mai,Tin - L.T.Nam,Tin - Đ.T.T.Hằng,V - L.T.Nhung,A - N.T.T.Huyền,V - N.N.Thủy,V - N.K.Thủy,QPAN - N.V.Nam,V - P.T.Nga,SU - V.T.H.Xiêm,
+,,2,T - B.T.Hương,H - L.N.Thuyết,A - N.T.T.Cảnh,V - M.T.T.Ninh,Tin - L.T.Nam,Đ - N.M.Hùng,V - L.T.Nhung,Đ - N.T.T.Trang,V - N.N.Thủy,V - N.K.Thủy,Tin - Đ.T.T.Hằng,V - P.T.Nga,CN - N.T.Tùng,
+,,3,SU - T.M.Hạnh,Tin - Đ.T.T.Hằng,A - N.T.T.Cảnh,CN - N.T.Tùng,V - L.T.Nhung,Đ - N.M.Hùng,QPAN - V.C.Cường,Đ - N.T.T.Trang,Đ - N.T.Hoà,GDĐP - B.Đ.Dương,L - P.T.Huệ,CN - P.Đ.Thắng,GDĐP - P.T.B.Hiền,
+,,4,A - N.M.Tuấn,T - N.N.Xuân,GDĐP - P.T.B.Hiền,S - N.T.Nhung,V - L.T.Nhung,CN - N.T.Tùng,SU - V.T.P.Thảo,Tin - Đ.T.T.Hằng,A - N.T.T.Cảnh,Đ - N.T.Hoà,L - P.T.Huệ,CN - P.Đ.Thắng,TQ - N.T.Hạnh,
+,,5,A - N.M.Tuấn,T - N.N.Xuân,S - H.M.Linh,S - N.T.Nhung,H - N.T.H.Lan,,SU - V.T.P.Thảo,SU - N.T.H.Thanh,A - N.T.T.Cảnh,CN - P.Đ.Thắng,Đ - N.T.Hoà,L - P.T.Huệ,TQ - N.T.Hạnh,`,
+
+  // 3. SÁNG K12
+`"THỜI KHÓA BIỂU KHỐI 12, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,LẦN 1
+BUỐI SÁNG,,,,,,,,,,,,,,,
+Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,
+CHỦ NHIỆM,,,N.C. Tâm,P.H. Quang,H.N. Khánh,K.V. Mạnh,N.T. Quý,N.T. Hạnh,P.T. Mai,B.T.T. Phương,Q.T.T. Phương,L.T. Nhung,N.T.V. Hà,Đ.T.T. Linh,L.T. Nguyệt
+Thứ,Buổi,Tiết,12T,12L,12H,12S,12TIN,12V,12SỬ,12Đ,12A1,12A2,12P,12N,12TQ
+Thứ 2,Sáng,1,TrN - T.T.T.Hương,TrN - N.V.Thụ,TrN - Đ.Q.Nga,TrN - N.T.P.Loan,TrN - N.T.Quý,TrN - P.T.B.Hiền,TrN - B.Đ.Dương,TrN - Đ.T.K.Nho,TrN - T.T.P.Thùy,TrN - P.T.Ngân,TrN - T.T.N.Quỳnh,TrN - N.P.Nga,TrN - L.Đ.Thọ
+,,2,TrN - T.T.T.Hương,TrN - N.V.Thụ,TrN - Đ.Q.Nga,TrN - N.T.P.Loan,TrN - N.T.Quý,TrN - P.T.B.Hiền,TrN - B.Đ.Dương,TrN - Đ.T.K.Nho,TrN - T.T.P.Thùy,TrN - P.T.Ngân,TrN - T.T.N.Quỳnh,TrN - N.P.Nga,TrN - L.Đ.Thọ
+,,3,A - P.N.L.Hương,L - P.H.Quang,H - L.N.Thuyết,A - H.H.Hà,QPAN - V.C.Cường,H - N.V.Thụ,KTPL - T.T.T.Huế,T - Đ.T.K.Nho,KTPL - L.T.H.Hạnh,Tin - N.T.Lý,Đ - N.T.M.Nguyệt,H - P.T.Khuyên,Đ - N.M.Hùng
+,,4,S - N.T.Nhung,L - P.H.Quang,H - L.N.Thuyết,GDĐP - N.T.T.Huyền,Tin - N.T.Lý,V - N.P.Nga,CN - N.T.T.Vân,QPAN - H.T.Hảo,A - H.T.Sáu,KTPL - T.T.T.Huế,SU - L.T.Vinh,KTPL - V.T.Hiền,SU - N.T.H.Thanh
+,,5,S - N.T.Nhung,Tin - N.T.Lý,S - L.T.K.Tuyến,KTPL - T.T.T.Huế,H - L.N.Thuyết,V - N.P.Nga,H - N.V.Thụ,,A - H.T.Sáu,Đ - N.T.M.Nguyệt,L - N.T.Quý,N - Đ.T.T.Linh,GDĐP - T.T.N.Quỳnh
+Thứ 3,Sáng,1,T - N.C.Tâm,V - P.T.M.Hòa,L - N.M.Loan,T - N.T.P.Loan,A - Đ.T.T.Mai,CN - N.T.T.Vân,T - B.Đ.Dương,V - N.T.T.Hường,KTPL - L.T.H.Hạnh,L - B.M.Tuấn,T - T.T.N.Quỳnh,L - N.T.Quý,T - L.Đ.Thọ
+,,2,T - N.C.Tâm,V - P.T.M.Hòa,T - Đ.T.K.Nho,T - N.T.P.Loan,L - N.T.Quý,CN - N.T.T.Vân,A - P.N.L.Hương,V - N.T.T.Hường,L - B.M.Tuấn,SU - P.T.Mai,T - T.T.N.Quỳnh,V - N.P.Nga,T - L.Đ.Thọ
+,,3,L - T.T.T.Hương,H - P.T.Khuyên,T - Đ.T.K.Nho,L - N.T.T.Hoan,Tin - N.T.Đức,T - P.T.B.Hiền,Đ - V.X.Thanh,A - L.T.T.Oanh,L - B.M.Tuấn,SU - P.T.Mai,P - N.T.V.Hà,V - N.P.Nga,CN - N.T.Tùng
+,,4,QPAN - N.V.Nam,QPAN - V.C.Cường,SU - N.T.H.Thanh,SU - L.T.Vinh,Tin - N.T.Đức,T - P.T.B.Hiền,CN - N.T.T.Vân,Đ - B.T.T.Phương,T - T.T.P.Thùy,T - P.T.Ngân,P - N.T.V.Hà,N - Đ.T.T.Linh,KTPL - L.T.H.Hạnh
+,,5,Tin - N.T.Lý,S - L.T.K.Tuyến,A - P.N.L.Hương,H - H.N.Khánh,SU - N.T.H.Thanh,SU - L.T.Vinh,,Đ - B.T.T.Phương,T - T.T.P.Thùy,T - P.T.Ngân,L - N.T.Quý,N - Đ.T.T.Linh,L - N.T.T.Hoan
+Thứ 4,Sáng,1,V - N.C.Nhung,L - P.H.Quang,H - L.N.Thuyết,S - K.V.Mạnh,T - L.Đ.Thọ,A - T.T.T.Hà,GDĐP - L.T.K.Tuyến,H - N.V.Thụ,T - T.T.P.Thùy,A - N.T.Phương,T - T.T.N.Quỳnh,Đ - N.M.Hùng,V - N.T.M.Anh
+,,2,V - N.C.Nhung,L - P.H.Quang,CN - N.T.Tùng,A - H.H.Hà,T - L.Đ.Thọ,GDĐP - L.T.K.Tuyến,QPAN - N.V.Nam,H - N.V.Thụ,T - T.T.P.Thùy,A - N.T.Phương,T - T.T.N.Quỳnh,CN - N.T.T.Vân,V - N.T.M.Anh
+,,3,GDTC,GDTC,GDTC,A - H.H.Hà,GDTC,GDTC,GDTC,Đ - B.T.T.Phương,QPAN - V.C.Cường,QPAN - N.V.Nam,CN - N.T.T.Vân,KTPL - V.T.Hiền,T - L.Đ.Thọ
+,,4,T - N.C.Tâm,H - P.T.Khuyên,V - Đ.Q.Nga,GDTC,L - N.T.Quý,T - P.T.B.Hiền,SU - P.T.Mai,GDTC,GDTC,GDTC,GDTC,GDTC,T - L.Đ.Thọ
+,,5,T - N.C.Tâm,SU - L.T.Vinh,V - Đ.Q.Nga,H - H.N.Khánh,S - L.T.K.Tuyến,TrN - P.T.B.Hiền,SU - P.T.Mai,CN - N.T.T.Vân,A - H.T.Sáu,L - B.M.Tuấn,KTPL - V.T.Hiền,L - N.T.Quý,QPAN - N.V.Nam
+Thứ 5,Sáng,1,SU - N.T.H.Thanh,S - L.T.K.Tuyến,T - Đ.T.K.Nho,L - N.T.T.Hoan,A - Đ.T.T.Mai,SU - L.T.Vinh,H - N.V.Thụ,SU - V.T.P.Thảo,Đ - N.T.M.Nguyệt,V - L.T.Nhung,L - N.T.Quý,CN - N.T.T.Vân,GDTC
+,,2,SU - N.T.H.Thanh,A - N.T.Phương,T - Đ.T.K.Nho,V - P.T.Nga,L - N.T.Quý,KTPL - L.T.H.Hạnh,T - B.Đ.Dương,SU - V.T.P.Thảo,V - Q.T.T.Phương,V - L.T.Nhung,P - N.T.V.Hà,Đ - N.M.Hùng,GDTC
+,,3,H - V.T.P.Thảo,SU - L.T.Vinh,A - P.N.L.Hương,V - P.T.Nga,T - L.Đ.Thọ,Đ - N.M.Hùng,T - B.Đ.Dương,T - Đ.T.K.Nho,V - Q.T.T.Phương,A - N.T.Phương,P - N.T.V.Hà,L - N.T.Quý,L - N.T.T.Hoan
+,,4,A - P.N.L.Hương,T - N.T.Long,QPAN - H.T.Hảo,S - K.V.Mạnh,T - L.Đ.Thọ,V - N.T.Hạnh,Đ - V.X.Thanh,T - Đ.T.K.Nho,A - H.T.Sáu,T - P.T.Ngân,CN - N.T.T.Vân,V - N.P.Nga,TQ - L.T.Nguyệt
+,,5,L - T.T.T.Hương,T - N.T.Long,V - Đ.Q.Nga,S - K.V.Mạnh,S - L.T.K.Tuyến,V - N.T.Hạnh,Đ - V.X.Thanh,CN - N.T.T.Vân,A - H.T.Sáu,T - P.T.Ngân,SU - L.T.Vinh,V - N.P.Nga,TQ - L.T.Nguyệt
+Thứ 6,Sáng,1,GDTC,GDTC,GDTC,SU - L.T.Vinh,GDTC,GDTC,GDTC,KTPL - V.T.Hiền,Tin - N.T.Lý,L - B.M.Tuấn,P - N.T.V.Hà,SU - N.T.H.Thanh,Đ - N.M.Hùng
+,,2,L - T.T.T.Hương,Tin - N.T.Lý,L - N.M.Loan,GDTC,SU - N.T.H.Thanh,KTPL - L.T.H.Hạnh,V - P.T.Nga,GDTC,GDTC,GDTC,GDTC,GDTC,L - N.T.T.Hoan
+,,3,A - P.N.L.Hương,L - P.H.Quang,L - N.M.Loan,H - H.N.Khánh,GDĐP - N.T.T.Huyền,Đ - N.M.Hùng,V - P.T.Nga,Đ - B.T.T.Phương,L - B.M.Tuấn,KTPL - T.T.T.Huế,Đ - N.T.M.Nguyệt,H - P.T.Khuyên,KTPL - L.T.H.Hạnh
+,,4,GDĐP - N.T.T.Huyền,T - N.T.Long,H - H.N.Khánh,T - N.T.P.Loan,V - N.C.Nhung,V - N.T.Hạnh,SU - P.T.Mai,Đ - B.T.T.Phương,SU - L.T.Vinh,V - L.T.Nhung,V - Đ.Q.Nga,T - B.Đ.Dương,TQ - L.T.Nguyệt
+,,5,Tin - N.T.Lý,T - N.T.Long,H - H.N.Khánh,T - N.T.P.Loan,V - N.C.Nhung,V - N.T.Hạnh,SU - P.T.Mai,A - L.T.T.Oanh,SU - L.T.Vinh,V - L.T.Nhung,V - Đ.Q.Nga,T - B.Đ.Dương,CN - N.T.Tùng
+Thứ 7,Sáng,1,H - V.T.P.Thảo,V - P.T.M.Hòa,S - L.T.K.Tuyến,S - K.V.Mạnh,Tin - N.T.Lý,A - T.T.T.Hà,V - P.T.Nga,V - N.T.T.Hường,Đ - N.T.M.Nguyệt,A - N.T.Phương,KTPL - V.T.Hiền,SU - N.T.H.Thanh,V - N.T.M.Anh
+,,2,H - V.T.P.Thảo,H - P.T.Khuyên,SU - N.T.H.Thanh,S - K.V.Mạnh,Tin - N.T.Lý,A - T.T.T.Hà,V - P.T.Nga,V - N.T.T.Hường,GDĐP - Q.T.T.Quế,A - N.T.Phương,QPAN - V.C.Cường,N - Đ.T.T.Linh,V - N.T.M.Anh
+,,3,V - N.C.Nhung,GDĐP - N.T.T.Huyền,A - P.N.L.Hương,V - P.T.Nga,A - Đ.T.T.Mai,QPAN - N.V.Nam,KTPL - T.T.T.Huế,A - L.T.T.Oanh,V - Q.T.T.Phương,Tin - N.T.Lý,V - Đ.Q.Nga,N - Đ.T.T.Linh,SU - N.T.H.Thanh
+,,4,T - N.C.Tâm,A - N.T.Phương,GDĐP - N.T.T.Huyền,KTPL - T.T.T.Huế,V - N.C.Nhung,Đ - N.M.Hùng,A - P.N.L.Hương,KTPL - V.T.Hiền,V - Q.T.T.Phương,Đ - N.T.M.Nguyệt,V - Đ.Q.Nga,T - B.Đ.Dương,TQ - L.T.Nguyệt
+,,5,T - N.C.Tâm,A - N.T.Phương,CN - N.T.Tùng,QPAN - N.V.Nam,H - L.N.Thuyết,H - N.V.Thụ,A - P.N.L.Hương,GDĐP - L.T.K.Tuyến,Tin - N.T.Lý,,GDĐP - Q.T.T.Quế,T - B.Đ.Dương,TQ - L.T.Nguyệt`,
+
+  // 4. CHIỀU K10 (c10.csv)
+`"THỜI KHÓA BIỂU KHỐI 10, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,LẦN 1,
+BUỔI CHIỀU,,,,,,,,,,,,,,,,
+Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,,
+TT,,N.N. Xuân,N.T. Long,N.M. Loan,V.T.P. Thảo,Đ.T.L. Anh,L.T. Nghĩa,N.G. Hương,N.K. Thủy,N.T.N. Hà,V.X. Thanh,H.H. Hà,N.T.T. Hường,N.T.B. Hòa,Đ.T.H. Nhung,N.T.L. Anh
+Thứ,Tiết,10T1,10T2,10L,10H,10S,10TIN,10V1,10V2,10SỬ,10Đ,10A1,10A2,10P,10N,10TQ
+Thứ 2,1,TrN - P.T.M.Hòa,TrN - N.T.M.Anh,Nâng cao,Nâng cao,Nâng cao,TrN - L.T.Nghĩa,Nâng cao,Nâng cao,TrN - T.V.Hùng,Nâng cao,TrN - B.T.Hiền,Nâng cao,TrN - Đ.H.Lan,TrN - Q.T.T.Quế,Nâng cao
+,2,Nâng cao,Nâng cao,TrN - N.T.T.Hương,TrN - B.M.Tuấn,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,TrN - P.T.M.Hòa,Nâng cao,Nâng cao,Nâng cao,GDĐP - Đ.Q.Nga,Nâng cao
+,3,,,,,TrN - B.M.Tuấn,,,,,,,,,,
+,4,,,,,,,,,,,,,,,
+Thứ 3,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,TrN - T.T.N.Quỳnh,TrN - N.T.Thúy,Nâng cao,Nâng cao,Nâng cao,TrN - N.T.T.Hường,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,,,TrN - Đ.T.K.Nho
+,4,,,,,,,,,,,,,,,
+Thứ 4,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,,,
+Thứ 5,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,,,
+Thứ 6,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,,,
+Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,,,`,
+
+  // 5. CHIỀU K11 (c11.csv)
+`"THỜI KHÓA BIỂU KHỐI 11, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,LẦN 1
+BUỔI CHIỀU,,,,,,,,,,,,,
+Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,
+TT,,B.T. Hương,P.Đ. Mẫn,N.T.H. Lan,N.T. Nhung,N.T.P. Loan,V.T. Hằng,V.T.P. Thảo,N.T.T. Trang,N.T.T. Hương,P.T. Minh,N.P. Nga,P.M. Anh,N.T. Hạnh
+Thứ,Tiết,11T,11L,11H,11S,11TIN,11V,11SỬ,11Đ,11A1,11A2,11P,11N,11TQ
+Thứ 2,1,TrN - N.P.Thành,TrN - Đ.Q.Nga,Nâng cao,TrN - Đ.T.T.Mai,TrN - N.T.P.Loan,Nâng cao,TrN - N.M.Hùng,TrN - N.T.T.Huyền,TrN - N.T.T.Hương,Nâng cao,Nâng cao,Nâng cao,TrN - P.T.B.Hiền
+,2,Nâng cao,GDĐP - P.T.B.Hiền,Nâng cao,Nâng cao,Nâng cao,TrN - Đ.H.Lan,Nâng cao,Nâng cao,Nâng cao,Nâng cao,TrN - T.T.T.Huế,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,
+Thứ 3,1,Nâng cao,Nâng cao,TrN - Đ.T.Hường,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,TrN - L.Đ.Thọ,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,TrN - T.T.T.Huế,
+,4,,,,,,,,,,,,,
+Thứ 4,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,
+Thứ 5,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,
+Thứ 6,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,
+Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,`,
+
+  // 6. CHIỀU K12 (c12.csv)
+`"THỜI KHÓA BIỂU KHỐI 12, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,LẦN 1
+BUỔI CHIỀU,,,,,,,,,,,,,
+Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,
+TT,,N.C. Tâm,P.H. Quang,H.N. Khánh,K.V. Mạnh,N.T. Quý,N.T. Hạnh,P.T. Mai,B.T.T. Phương,Q.T.T. Phương,L.T. Nhung,N.T.V. Hà,Đ.T.T. Linh,L.T. Nguyệt
+Thứ,Tiết,12T,12L,12H,12S,12TIN,12V,12SỬ,12Đ,12A1,12A2,12P,12N,12TQ
+Thứ 2,1,Nâng cao,Nâng cao,Nâng cao,TrN - P.T.Nga,Nâng cao,Nâng cao,TrN - T.T.T.Huế,Nâng cao,Nâng cao,TrN - B.M.Tuấn,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,GDĐP - Q.T.T.Quế,Nâng cao,Nâng cao,TrN - N.M.Hùng
+,3,,TrN - P.T.M.Hòa,,,,,,,,,,,
+,4,,,,,,,,,,,,,
+Thứ 3,1,TrN - T.T.T.Hương,Nâng cao,Nâng cao,Nâng cao,TrN - L.Đ.Thọ,Nâng cao,Nâng cao,Nâng cao,TrN - T.T.P.Thùy,Nâng cao,Nâng cao,TrN - Đ.T.K.Nho,Nâng cao
+,2,Nâng cao,Nâng cao,TrN - Đ.T.K.Nho,Nâng cao,Nâng cao,Nâng cao,Nâng cao,TrN - N.T.T.Hường,,Nâng cao,Nâng cao,GDĐP - T.T.N.Quỳnh,Nâng cao
+,3,,,,,,,,,,,TrN - T.T.N.Quỳnh,QPAN - V.C.Cường,
+,4,,,,,,,,,,,,,
+Thứ 4,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,
+Thứ 5,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,
+Thứ 6,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,
+Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
+,3,,,,,,,,,,,,,
+,4,,,,,,,,,,,,,`
+];
+
+  const subjectMap = {
+    't': 'Toán', 'toan': 'Toán', 'trn': 'Trải nghiệm', 'gddp': 'GD địa phương',
+    'v': 'Ngữ văn', 'van': 'Ngữ văn', 'a': 'Tiếng Anh', 'ta': 'Tiếng Anh',
+    'anh': 'Tiếng Anh', 'l': 'Vật lý', 'ly': 'Vật lý', 'h': 'Hóa học',
+    'hoa': 'Hóa học', 'sin': 'Sinh học', 'sinh': 'Sinh học', 's': 'Sinh học',
+    'su': 'Lịch sử', 'd': 'Địa lý', 'dia': 'Địa lý', 'ktpl': 'GDKT & PL',
+    'qpan': 'GDQP - AN', 'qp': 'GDQP - AN', 'tin': 'Tin học', 'cn': 'Công nghệ',
+    'gdtc': 'GD Thể chất', 'td': 'Thể dục', 'p': 'Tiếng Pháp', 'n': 'Tiếng Nga',
+    'tq': 'Tiếng Trung', 'sh': 'Sinh hoạt', 'cc': 'Chào cờ'
+  };
+
+  let scheduleData = [];
+  let allTeachersList = [];
+
+  // Khởi tạo lưới bảng: Sáng 5 tiết (1->5) và Chiều 4 tiết (1->4 quy ước là 6->9)
+  function buildEmptyGrid() {
+    const tbody = document.getElementById('scheduleBody');
+    tbody.innerHTML = '';
+
+    // Buổi Sáng
+    const trHeaderSang = document.createElement('tr');
+    trHeaderSang.innerHTML = `<td colspan="7" class="session-separator">☀️ BUỔI SÁNG</td>`;
+    tbody.appendChild(trHeaderSang);
+
+    for (let tiet = 1; tiet <= 5; tiet++) {
+      const tr = document.createElement('tr');
+      let rowHtml = `<td class="tiet-col">Tiết ${tiet}</td>`;
+      for (let thu = 2; thu <= 7; thu++) {
+        rowHtml += `<td id="cell-${thu}-${tiet}"></td>`;
+      }
+      tr.innerHTML = rowHtml;
+      tbody.appendChild(tr);
+    }
+
+    // Buổi Chiều
+    const trHeaderChieu = document.createElement('tr');
+    trHeaderChieu.innerHTML = `<td colspan="7" class="session-separator">🌤️ BUỔI CHIỀU</td>`;
+    tbody.appendChild(trHeaderChieu);
+
+    for (let tietChieu = 1; tietChieu <= 4; tietChieu++) {
+      const gridRowKey = 5 + tietChieu; // 6, 7, 8, 9
+      const tr = document.createElement('tr');
+      let rowHtml = `<td class="tiet-col">Tiết ${tietChieu} (C)</td>`;
+      for (let thu = 2; thu <= 7; thu++) {
+        rowHtml += `<td id="cell-${thu}-${gridRowKey}"></td>`;
+      }
+      tr.innerHTML = rowHtml;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function parseCSVLine(textLine) {
+    const res = [];
+    let cur = '';
+    let inQuotes = false;
+    for (let i = 0; i < textLine.length; i++) {
+      const c = textLine[i];
+      if (c === '"') {
+        inQuotes = !inQuotes;
+      } else if (c === ',' && !inQuotes) {
+        res.push(cur.trim());
+        cur = '';
+      } else {
+        cur += c;
+      }
+    }
+    res.push(cur.trim());
+    return res;
+  }
+
+  function parseLessonCell(cellText) {
+    if (!cellText || typeof cellText !== 'string') return null;
+    const clean = cellText.replace(/^["']|["']$/g, '').trim();
+    if (!clean.includes('-')) return null;
+
+    const parts = clean.split('-');
+    const monCode = parts[0].trim();
+    const gvName = parts.slice(1).join('-').trim();
+    if (!gvName) return null;
+
+    const monKey = monCode.toLowerCase();
+    const monName = subjectMap[monKey] || monCode;
+    return { teacher: gvName, subject: monName };
+  }
+
+  function parseSchoolTKB(csvContent) {
+    const lines = csvContent.split(/\r?\n/).filter(l => l.trim() !== '');
+    const rows = lines.map(parseCSVLine);
+
+    // Xác định Buổi Sáng hay Buổi Chiều từ 3 dòng đầu
+    let isAfternoon = false;
+    for (let i = 0; i < Math.min(4, rows.length); i++) {
+      const lineStr = rows[i].join(' ').toLowerCase();
+      if (lineStr.includes('chiều') || lineStr.includes('chieu')) {
+        isAfternoon = true;
+        break;
+      }
+    }
+
+    // Tìm dòng header
+    let headerRowIdx = -1;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const hasThu = row.some(c => c.toLowerCase().includes('thứ'));
+      const hasTiet = row.some(c => c.toLowerCase().includes('tiết'));
+      if (hasThu && hasTiet) {
+        headerRowIdx = i;
+        break;
+      }
+    }
+    if (headerRowIdx === -1) return [];
+
+    const headerRow = rows[headerRowIdx];
+    let thuColIdx = headerRow.findIndex(c => c.toLowerCase().includes('thứ'));
+    let tietColIdx = headerRow.findIndex(c => c.toLowerCase().includes('tiết'));
+    let firstClassColIdx = Math.max(thuColIdx, tietColIdx) + 1;
+
+    const buoiColIdx = headerRow.findIndex(c => c.toLowerCase().includes('buổi'));
+    if (buoiColIdx !== -1) {
+      firstClassColIdx = Math.max(firstClassColIdx, buoiColIdx + 1);
+    }
+
+    const classNames = [];
+    for (let col = firstClassColIdx; col < headerRow.length; col++) {
+      classNames[col] = headerRow[col] ? headerRow[col].trim() : '';
+    }
+
+    const records = [];
+    let currentThu = null;
+
+    for (let r = headerRowIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      if (!row || row.length <= firstClassColIdx) continue;
+
+      const rawThu = row[thuColIdx] ? row[thuColIdx].trim() : '';
+      if (rawThu) {
+        const matchThu = rawThu.match(/\d+/);
+        if (matchThu) currentThu = parseInt(matchThu[0], 10);
+      }
+
+      const rawTiet = row[tietColIdx] ? row[tietColIdx].trim() : '';
+      const tietNum = parseInt(rawTiet, 10);
+      if (!currentThu || isNaN(tietNum) || tietNum < 1 || tietNum > 5) continue;
+
+      // Chiều: tiết 1->4 chuyển thành slot hàng 6->9
+      const gridRowSlot = isAfternoon ? (5 + tietNum) : tietNum;
+
+      for (let c = firstClassColIdx; c < row.length; c++) {
+        const cellValue = row[c];
+        const lop = classNames[c];
+        if (!cellValue || !lop) continue;
+
+        const parsed = parseLessonCell(cellValue);
+        if (parsed && parsed.teacher) {
+          records.push({
+            teacher: parsed.teacher,
+            subject: parsed.subject,
+            className: lop,
+            thu: currentThu,
+            gridSlot: gridRowSlot,
+            isAfternoon: isAfternoon,
+            originalTiet: tietNum
+          });
+        }
+      }
+    }
+    return records;
+  }
+
+  function filterTeacherDropdown(keyword = '') {
+    const select = document.getElementById('teacherSelect');
+    const currentSelected = select.value;
+    select.innerHTML = '';
+
+    const normalizedKw = keyword.toLowerCase().trim();
+    const filteredTeachers = allTeachersList.filter(t => t.toLowerCase().includes(normalizedKw));
+
+    if (filteredTeachers.length === 0) {
+      select.innerHTML = '<option value="">-- Không tìm thấy --</option>';
+      renderScheduleForTeacher('');
+      return;
+    }
+
+    filteredTeachers.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      select.appendChild(opt);
+    });
+
+    if (filteredTeachers.includes(currentSelected)) {
+      select.value = currentSelected;
+      renderScheduleForTeacher(currentSelected);
+    } else {
+      select.value = filteredTeachers[0];
+      renderScheduleForTeacher(filteredTeachers[0]);
+    }
+  }
+
+  function renderScheduleForTeacher(teacherName) {
+    buildEmptyGrid();
+    if (!teacherName) {
+      document.getElementById('totalLessons').textContent = `Tổng số tiết: 0`;
+      document.getElementById('pageHeading').textContent = `Thời Khóa Biểu Giảng Dạy`;
+      return;
+    }
+
+    document.getElementById('pageHeading').textContent = `Thời Khóa Biểu Giảng Dạy - GV: ${teacherName}`;
+    const filtered = scheduleData.filter(r => r.teacher === teacherName);
+    document.getElementById('totalLessons').textContent = `Tổng số tiết: ${filtered.length}`;
+
+    filtered.forEach(item => {
+      if (item.thu >= 2 && item.thu <= 7 && item.gridSlot >= 1 && item.gridSlot <= 9) {
+        const cell = document.getElementById(`cell-${item.thu}-${item.gridSlot}`);
+        if (cell) {
+          const afternoonClass = item.isAfternoon ? 'cell-afternoon' : '';
+          cell.innerHTML += `
+            <div class="cell-occupied ${afternoonClass}">
+              <div class="cell-subject">${item.subject}</div>
+              <div class="cell-class">Lớp ${item.className}</div>
+            </div>
+          `;
+        }
+      }
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    filterTeacherDropdown(e.target.value);
+  });
+
+  document.getElementById('teacherSelect').addEventListener('change', function(e) {
+    renderScheduleForTeacher(e.target.value);
+  });
+
+  window.onload = function() {
+    buildEmptyGrid();
+
+    // Phân tích và gộp dữ liệu từ toàn bộ 6 file CSV
+    let allRecords = [];
+    rawDataFiles.forEach(csvText => {
+      allRecords = allRecords.concat(parseSchoolTKB(csvText));
+    });
+    scheduleData = allRecords;
+
+    allTeachersList = [...new Set(scheduleData.map(r => r.teacher))]
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b, 'vi'));
+
+    filterTeacherDropdown('');
+    
+    // Mặc định chọn B.Đ.Dương
+    const defaultTeacher = allTeachersList.find(t => t.includes('B.Đ.Dương'));
+    if (defaultTeacher) {
+      document.getElementById('teacherSelect').value = defaultTeacher;
+      renderScheduleForTeacher(defaultTeacher);
+    }
+  };
+</script>
+
+</body>
+</html>
