@@ -2,15 +2,16 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thời Khóa Biểu Toàn Trường (Sáng & Chiều) - K10, K11, K12</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Thời Khóa Biểu Giảng Dạy</title>
   <style>
     * {
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
-      padding: 20px;
+      padding: 10px;
       background-color: #f1f5f9;
       color: #1e293b;
       margin: 0;
@@ -19,111 +20,160 @@
       max-width: 1150px;
       margin: 0 auto;
       background: #ffffff;
-      padding: 24px;
+      padding: 14px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
     h1 {
       text-align: center;
-      margin-top: 0;
+      margin: 4px 0 2px 0;
       color: #1e3a8a;
-      font-size: 24px;
+      font-size: 18px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     .sub-title {
       text-align: center;
-      font-size: 13px;
+      font-size: 12px;
       color: #64748b;
-      margin-top: -8px;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
     .toolbar {
       display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      padding: 16px;
+      padding: 12px;
       border-radius: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
-    .control-group {
+    .control-row {
       display: flex;
-      align-items: center;
       gap: 8px;
+      align-items: center;
+    }
+    @media (min-width: 768px) {
+      body { padding: 20px; }
+      .container { padding: 24px; }
+      h1 { font-size: 24px; }
+      .toolbar { flex-direction: row; flex-wrap: wrap; }
+      .control-row { width: auto; }
+      .stats { margin-left: auto; width: auto; }
     }
     label {
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       color: #334155;
+      white-space: nowrap;
     }
     input[type="text"], select {
-      padding: 8px 12px;
+      flex: 1;
+      padding: 9px 12px;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       font-size: 14px;
       background: white;
-    }
-    input[type="text"] {
-      width: 180px;
+      outline: none;
     }
     select {
-      min-width: 250px;
-      cursor: pointer;
       font-weight: 500;
     }
+    .btn {
+      padding: 9px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .btn-toggle {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .btn-print {
+      background: #0284c7;
+      color: white;
+    }
     .stats {
-      margin-left: auto;
+      text-align: center;
       font-weight: 700;
       color: #1d4ed8;
       background: #eff6ff;
-      padding: 8px 14px;
+      padding: 8px 12px;
       border-radius: 6px;
       border: 1px solid #bfdbfe;
+      font-size: 14px;
     }
+
+    /* KHUNG CUỘN CHUYÊN DỤNG CHO MOBILE */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      position: relative;
+    }
+
     table {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      table-layout: fixed;
+      min-width: 620px;
+      border-collapse: separate;
+      border-spacing: 0;
     }
     th, td {
-      border: 1px solid #cbd5e1;
+      border-right: 1px solid #cbd5e1;
+      border-bottom: 1px solid #cbd5e1;
       text-align: center;
-      padding: 6px;
-      height: 50px;
+      padding: 5px 3px;
+      height: 48px;
       vertical-align: middle;
+      font-size: 13px;
     }
     th {
       background-color: #1e3a8a;
       color: #ffffff;
-      font-size: 14px;
       font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
     .session-separator {
       background-color: #f1f5f9;
       font-weight: bold;
       color: #475569;
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 1px;
+      text-align: left;
+      padding-left: 10px;
     }
+    
+    /* CỐ ĐỊNH CỘT TIẾT BÊN TRÁI */
     .tiet-col {
+      width: 76px;
+      min-width: 76px;
       background-color: #f8fafc;
       font-weight: bold;
-      width: 85px;
       color: #475569;
-      font-size: 13px;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      border-right: 2px solid #94a3b8;
     }
+    th.tiet-col {
+      z-index: 3;
+      background-color: #172554;
+    }
+
     .cell-occupied {
       background-color: #e0f2fe;
       border: 1px solid #7dd3fc;
-      border-radius: 6px;
-      padding: 4px 6px;
-      margin: 2px 0;
-      text-align: center;
+      border-radius: 5px;
+      padding: 3px 2px;
+      margin: 1px 0;
     }
     .cell-afternoon {
       background-color: #fef3c7;
@@ -135,31 +185,29 @@
     .cell-subject {
       font-weight: 700;
       color: #0369a1;
-      font-size: 13px;
+      font-size: 12px;
+      line-height: 1.2;
     }
     .cell-class {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       color: #0f172a;
       margin-top: 2px;
     }
-    .print-btn {
-      padding: 8px 16px;
-      background: #0284c7;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
+
+    /* ẨN BUỔI CHIỀU NẾU KHÔNG DÙNG */
+    .hidden-chieu .row-chieu {
+      display: none !important;
     }
-    .print-btn:hover {
-      background: #0369a1;
-    }
+
     @media print {
       body { background: white; padding: 0; }
       .container { box-shadow: none; padding: 0; max-width: 100%; }
       .toolbar, .sub-title { display: none !important; }
-      th { background-color: #333 !important; color: white !important; -webkit-print-color-adjust: exact; }
+      .table-responsive { overflow: visible; border: none; }
+      table { min-width: 100%; border-collapse: collapse; }
+      .tiet-col { position: static; }
+      th { background-color: #333 !important; color: white !important; -webkit-print-color-adjust: exact; position: static; }
       .cell-occupied { border: 1px solid #999 !important; background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
     }
   </style>
@@ -168,48 +216,47 @@
 
 <div class="container">
   <h1 id="pageHeading">Thời Khóa Biểu Giảng Dạy</h1>
-  <div class="sub-title">Năm học 2026 - 2027 • Tích hợp Buổi Sáng & Chiều (Khối 10, 11, 12)</div>
+  <div class="sub-title">Năm học 2026 - 2027 • Khối 10, 11, 12</div>
 
   <div class="toolbar">
-    <div class="control-group">
-      <label for="searchInput">🔍 Tìm GV:</label>
-      <input type="text" id="searchInput" placeholder="Gõ tên để lọc...">
+    <div class="control-row">
+      <label for="searchInput">🔍 Tìm:</label>
+      <input type="text" id="searchInput" placeholder="Gõ tên để lọc danh sách...">
     </div>
 
-    <div class="control-group">
-      <label for="teacherSelect">Chọn GV:</label>
+    <div class="control-row">
+      <label for="teacherSelect">GV:</label>
       <select id="teacherSelect">
         <option value="">-- Đang nạp danh sách --</option>
       </select>
-    </div>
-
-    <div class="control-group">
-      <button class="print-btn" onclick="window.print()">🖨️ In Lịch</button>
+      <button class="btn btn-toggle" id="toggleChieuBtn" onclick="toggleAfternoon()">Ẩn Chiều</button>
+      <button class="btn btn-print" onclick="window.print()">🖨️ In</button>
     </div>
 
     <div class="stats" id="totalLessons">Tổng số tiết: 0</div>
   </div>
 
-  <table id="scheduleTable">
-    <thead>
-      <tr>
-        <th class="tiet-col">Buổi / Tiết</th>
-        <th>Thứ 2</th>
-        <th>Thứ 3</th>
-        <th>Thứ 4</th>
-        <th>Thứ 5</th>
-        <th>Thứ 6</th>
-        <th>Thứ 7</th>
-      </tr>
-    </thead>
-    <tbody id="scheduleBody"></tbody>
-  </table>
+  <div class="table-responsive" id="tableContainer">
+    <table id="scheduleTable">
+      <thead>
+        <tr>
+          <th class="tiet-col">Tiết</th>
+          <th>Thứ 2</th>
+          <th>Thứ 3</th>
+          <th>Thứ 4</th>
+          <th>Thứ 5</th>
+          <th>Thứ 6</th>
+          <th>Thứ 7</th>
+        </tr>
+      </thead>
+      <tbody id="scheduleBody"></tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-// Nạp toàn bộ dữ liệu 6 file (Sáng + Chiều của 3 Khối)
+// Dữ liệu 6 file đã tích hợp sẵn
 const rawDataFiles = [
-  // 1. SÁNG K10
 `"THỜI KHÓA BIỂU KHỐI 10, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,,LẦN 1
 BUỐI SÁNG,,,,,,,,,,,,,,,,
 Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,,
@@ -246,7 +293,6 @@ Thứ 7,1,T - N.N.Xuân,GDĐP - M.T.T.Ninh,H - N.T.H.Lan,S - B.T.T.Ngân,T - P.T
 ,4,V - P.T.M.Hòa,H - L.N.Thuyết,SU - T.M.Hạnh,H - V.T.P.Thảo,S - B.T.T.Ngân,V - P.T.Nga,S - L.T.K.Tuyến,GDĐP - N.N.Thủy,H - N.V.Thụ,Đ - V.X.Thanh,A - H.H.Hà,T - L.T.Nghĩa,QPAN - V.C.Cường,Tin - N.T.Dũng,TQ - N.T.L.Anh
 ,5,SU - T.M.Hạnh,S - B.T.T.Ngân,V - N.C.Nhung,H - V.T.P.Thảo,,V - P.T.Nga,KTPL - T.T.T.Huế,A - N.T.T.Huyền,Đ - N.T.M.Nguyệt,Đ - V.X.Thanh,A - H.H.Hà,T - L.T.Nghĩa,GDĐP - Đ.Q.Nga,N - Đ.T.H.Nhung,KTPL - V.T.Hiền`,
 
-  // 2. SÁNG K11
 `"THỜI KHÓA BIỂU KHỐI 11, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,LẦN 1,
 BUỐI SÁNG,,,,,,,,,,,,,,,,
 Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,,
@@ -283,7 +329,6 @@ Thứ 7,Sáng,1,T - B.T.Hương,S - H.M.Linh,H - P.T.Khuyên,A - Đ.T.T.Mai,Tin 
 ,,4,A - N.M.Tuấn,T - N.N.Xuân,GDĐP - P.T.B.Hiền,S - N.T.Nhung,V - L.T.Nhung,CN - N.T.Tùng,SU - V.T.P.Thảo,Tin - Đ.T.T.Hằng,A - N.T.T.Cảnh,Đ - N.T.Hoà,L - P.T.Huệ,CN - P.Đ.Thắng,TQ - N.T.Hạnh,
 ,,5,A - N.M.Tuấn,T - N.N.Xuân,S - H.M.Linh,S - N.T.Nhung,H - N.T.H.Lan,,SU - V.T.P.Thảo,SU - N.T.H.Thanh,A - N.T.T.Cảnh,CN - P.Đ.Thắng,Đ - N.T.Hoà,L - P.T.Huệ,TQ - N.T.Hạnh,`,
 
-  // 3. SÁNG K12
 `"THỜI KHÓA BIỂU KHỐI 12, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,LẦN 1
 BUỐI SÁNG,,,,,,,,,,,,,,,
 Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,
@@ -320,7 +365,6 @@ Thứ 7,Sáng,1,H - V.T.P.Thảo,V - P.T.M.Hòa,S - L.T.K.Tuyến,S - K.V.Mạnh
 ,,4,T - N.C.Tâm,A - N.T.Phương,GDĐP - N.T.T.Huyền,KTPL - T.T.T.Huế,V - N.C.Nhung,Đ - N.M.Hùng,A - P.N.L.Hương,KTPL - V.T.Hiền,V - Q.T.T.Phương,Đ - N.T.M.Nguyệt,V - Đ.Q.Nga,T - B.Đ.Dương,TQ - L.T.Nguyệt
 ,,5,T - N.C.Tâm,A - N.T.Phương,CN - N.T.Tùng,QPAN - N.V.Nam,H - L.N.Thuyết,H - N.V.Thụ,A - P.N.L.Hương,GDĐP - L.T.K.Tuyến,Tin - N.T.Lý,,GDĐP - Q.T.T.Quế,T - B.Đ.Dương,TQ - L.T.Nguyệt`,
 
-  // 4. CHIỀU K10 (c10.csv)
 `"THỜI KHÓA BIỂU KHỐI 10, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,LẦN 1,
 BUỔI CHIỀU,,,,,,,,,,,,,,,,
 Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,,
@@ -351,7 +395,6 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
 ,3,,,,,,,,,,,,,,,
 ,4,,,,,,,,,,,,,,,`,
 
-  // 5. CHIỀU K11 (c11.csv)
 `"THỜI KHÓA BIỂU KHỐI 11, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,LẦN 1
 BUỔI CHIỀU,,,,,,,,,,,,,
 Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,
@@ -382,7 +425,6 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
 ,3,,,,,,,,,,,,,
 ,4,,,,,,,,,,,,,`,
 
-  // 6. CHIỀU K12 (c12.csv)
 `"THỜI KHÓA BIỂU KHỐI 12, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,LẦN 1
 BUỔI CHIỀU,,,,,,,,,,,,,
 Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,
@@ -427,19 +469,21 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
 
   let scheduleData = [];
   let allTeachersList = [];
+  let hideAfternoonState = false;
 
-  // Khởi tạo lưới bảng: Sáng 5 tiết (1->5) và Chiều 4 tiết (1->4 quy ước là 6->9)
   function buildEmptyGrid() {
     const tbody = document.getElementById('scheduleBody');
     tbody.innerHTML = '';
 
     // Buổi Sáng
     const trHeaderSang = document.createElement('tr');
+    trHeaderSang.className = 'row-sang';
     trHeaderSang.innerHTML = `<td colspan="7" class="session-separator">☀️ BUỔI SÁNG</td>`;
     tbody.appendChild(trHeaderSang);
 
     for (let tiet = 1; tiet <= 5; tiet++) {
       const tr = document.createElement('tr');
+      tr.className = 'row-sang';
       let rowHtml = `<td class="tiet-col">Tiết ${tiet}</td>`;
       for (let thu = 2; thu <= 7; thu++) {
         rowHtml += `<td id="cell-${thu}-${tiet}"></td>`;
@@ -450,12 +494,14 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
 
     // Buổi Chiều
     const trHeaderChieu = document.createElement('tr');
+    trHeaderChieu.className = 'row-chieu';
     trHeaderChieu.innerHTML = `<td colspan="7" class="session-separator">🌤️ BUỔI CHIỀU</td>`;
     tbody.appendChild(trHeaderChieu);
 
     for (let tietChieu = 1; tietChieu <= 4; tietChieu++) {
-      const gridRowKey = 5 + tietChieu; // 6, 7, 8, 9
+      const gridRowKey = 5 + tietChieu;
       const tr = document.createElement('tr');
+      tr.className = 'row-chieu';
       let rowHtml = `<td class="tiet-col">Tiết ${tietChieu} (C)</td>`;
       for (let thu = 2; thu <= 7; thu++) {
         rowHtml += `<td id="cell-${thu}-${gridRowKey}"></td>`;
@@ -503,7 +549,6 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     const lines = csvContent.split(/\r?\n/).filter(l => l.trim() !== '');
     const rows = lines.map(parseCSVLine);
 
-    // Xác định Buổi Sáng hay Buổi Chiều từ 3 dòng đầu
     let isAfternoon = false;
     for (let i = 0; i < Math.min(4, rows.length); i++) {
       const lineStr = rows[i].join(' ').toLowerCase();
@@ -513,7 +558,6 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
       }
     }
 
-    // Tìm dòng header
     let headerRowIdx = -1;
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
@@ -558,7 +602,6 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
       const tietNum = parseInt(rawTiet, 10);
       if (!currentThu || isNaN(tietNum) || tietNum < 1 || tietNum > 5) continue;
 
-      // Chiều: tiết 1->4 chuyển thành slot hàng 6->9
       const gridRowSlot = isAfternoon ? (5 + tietNum) : tietNum;
 
       for (let c = firstClassColIdx; c < row.length; c++) {
@@ -574,8 +617,7 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
             className: lop,
             thu: currentThu,
             gridSlot: gridRowSlot,
-            isAfternoon: isAfternoon,
-            originalTiet: tietNum
+            isAfternoon: isAfternoon
           });
         }
       }
@@ -625,6 +667,22 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     const filtered = scheduleData.filter(r => r.teacher === teacherName);
     document.getElementById('totalLessons').textContent = `Tổng số tiết: ${filtered.length}`;
 
+    // Tự động kiểm tra xem GV có tiết chiều hay không
+    const hasAfternoonLesson = filtered.some(item => item.isAfternoon);
+    const tableContainer = document.getElementById('tableContainer');
+    const toggleBtn = document.getElementById('toggleChieuBtn');
+
+    // Nếu không có tiết chiều, tự động ẩn buổi chiều để bảng gọn gàng
+    if (!hasAfternoonLesson) {
+      hideAfternoonState = true;
+      tableContainer.classList.add('hidden-chieu');
+      toggleBtn.textContent = 'Hiện Chiều';
+    } else {
+      hideAfternoonState = false;
+      tableContainer.classList.remove('hidden-chieu');
+      toggleBtn.textContent = 'Ẩn Chiều';
+    }
+
     filtered.forEach(item => {
       if (item.thu >= 2 && item.thu <= 7 && item.gridSlot >= 1 && item.gridSlot <= 9) {
         const cell = document.getElementById(`cell-${item.thu}-${item.gridSlot}`);
@@ -641,6 +699,20 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     });
   }
 
+  // Chức năng bật/tắt thủ công buổi chiều
+  function toggleAfternoon() {
+    hideAfternoonState = !hideAfternoonState;
+    const tableContainer = document.getElementById('tableContainer');
+    const toggleBtn = document.getElementById('toggleChieuBtn');
+    if (hideAfternoonState) {
+      tableContainer.classList.add('hidden-chieu');
+      toggleBtn.textContent = 'Hiện Chiều';
+    } else {
+      tableContainer.classList.remove('hidden-chieu');
+      toggleBtn.textContent = 'Ẩn Chiều';
+    }
+  }
+
   document.getElementById('searchInput').addEventListener('input', function(e) {
     filterTeacherDropdown(e.target.value);
   });
@@ -652,7 +724,6 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
   window.onload = function() {
     buildEmptyGrid();
 
-    // Phân tích và gộp dữ liệu từ toàn bộ 6 file CSV
     let allRecords = [];
     rawDataFiles.forEach(csvText => {
       allRecords = allRecords.concat(parseSchoolTKB(csvText));
