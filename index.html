@@ -2,57 +2,19 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Thời Khóa Biểu Giảng Dạy</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body {
-      padding: 10px;
-      background-color: #f1f5f9;
-      color: #1e293b;
-      margin: 0;
-    }
-    .container {
-      max-width: 1150px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 14px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-    h1 {
-      text-align: center;
-      margin: 4px 0 2px 0;
-      color: #1e3a8a;
-      font-size: 18px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .sub-title {
-      text-align: center;
-      font-size: 12px;
-      color: #64748b;
-      margin-bottom: 12px;
-    }
-    .toolbar {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 12px;
-    }
-    .control-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { padding: 10px; background-color: #f1f5f9; color: #1e293b; margin: 0; }
+    .container { max-width: 1150px; margin: 0 auto; background: #ffffff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    h1 { text-align: center; margin: 4px 0 2px 0; color: #1e3a8a; font-size: 18px; text-transform: uppercase; }
+    .sub-title { text-align: center; font-size: 12px; color: #16a34a; font-weight: 600; margin-bottom: 12px; }
+    .toolbar { display: flex; flex-direction: column; gap: 10px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 12px; }
+    .control-row { display: flex; gap: 8px; align-items: center; }
     @media (min-width: 768px) {
       body { padding: 20px; }
       .container { padding: 24px; }
@@ -61,154 +23,44 @@
       .control-row { width: auto; }
       .stats { margin-left: auto; width: auto; }
     }
-    label {
-      font-weight: 600;
-      font-size: 13px;
-      color: #334155;
-      white-space: nowrap;
-    }
-    input[type="text"], select {
-      flex: 1;
-      padding: 9px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 14px;
-      background: white;
-      outline: none;
-    }
-    select {
-      font-weight: 500;
-    }
-    .btn {
-      padding: 9px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    .btn-toggle {
-      background: #e2e8f0;
-      color: #334155;
-    }
-    .btn-print {
-      background: #0284c7;
-      color: white;
-    }
-    .stats {
-      text-align: center;
-      font-weight: 700;
-      color: #1d4ed8;
-      background: #eff6ff;
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #bfdbfe;
-      font-size: 14px;
-    }
+    label { font-weight: 600; font-size: 13px; color: #334155; white-space: nowrap; }
+    input[type="text"], select { flex: 1; min-width: 160px; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; background: white; outline: none; }
+    .btn { padding: 9px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; white-space: nowrap; }
+    .btn-toggle { background: #e2e8f0; color: #334155; }
+    .btn-print { background: #0284c7; color: white; }
+    .btn-admin { background: #475569; color: white; }
+    .stats { text-align: center; font-weight: 700; color: #1d4ed8; background: #eff6ff; padding: 8px 12px; border-radius: 6px; border: 1px solid #bfdbfe; font-size: 14px; }
 
-    /* KHUNG CUỘN CHUYÊN DỤNG CHO MOBILE */
-    .table-responsive {
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      position: relative;
-    }
+    /* BẢNG ADMIN */
+    .admin-panel { display: none; background: #fffbeb; border: 1px solid #fde68a; padding: 14px; border-radius: 8px; margin-bottom: 14px; }
+    .admin-panel h3 { margin: 0 0 10px 0; font-size: 15px; color: #92400e; }
+    .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .file-input-group { background: white; padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 12px; }
+    .file-input-group label { display: block; margin-bottom: 4px; color: #1e3a8a; }
+    .btn-upload-all { background: #16a34a; color: white; padding: 10px 16px; width: 100%; font-size: 14px; }
 
-    table {
-      width: 100%;
-      min-width: 620px;
-      border-collapse: separate;
-      border-spacing: 0;
-    }
-    th, td {
-      border-right: 1px solid #cbd5e1;
-      border-bottom: 1px solid #cbd5e1;
-      text-align: center;
-      padding: 5px 3px;
-      height: 48px;
-      vertical-align: middle;
-      font-size: 13px;
-    }
-    th {
-      background-color: #1e3a8a;
-      color: #ffffff;
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-      z-index: 2;
-    }
-    .session-separator {
-      background-color: #f1f5f9;
-      font-weight: bold;
-      color: #475569;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-align: left;
-      padding-left: 10px;
-    }
-    
-    /* CỐ ĐỊNH CỘT TIẾT BÊN TRÁI */
-    .tiet-col {
-      width: 76px;
-      min-width: 76px;
-      background-color: #f8fafc;
-      font-weight: bold;
-      color: #475569;
-      position: sticky;
-      left: 0;
-      z-index: 1;
-      border-right: 2px solid #94a3b8;
-    }
-    th.tiet-col {
-      z-index: 3;
-      background-color: #172554;
-    }
-
-    .cell-occupied {
-      background-color: #e0f2fe;
-      border: 1px solid #7dd3fc;
-      border-radius: 5px;
-      padding: 3px 2px;
-      margin: 1px 0;
-    }
-    .cell-afternoon {
-      background-color: #fef3c7;
-      border-color: #fcd34d;
-    }
-    .cell-afternoon .cell-subject {
-      color: #b45309;
-    }
-    .cell-subject {
-      font-weight: 700;
-      color: #0369a1;
-      font-size: 12px;
-      line-height: 1.2;
-    }
-    .cell-class {
-      font-size: 11px;
-      font-weight: 600;
-      color: #0f172a;
-      margin-top: 2px;
-    }
-
-    /* ẨN BUỔI CHIỀU NẾU KHÔNG DÙNG */
-    .hidden-chieu .row-chieu {
-      display: none !important;
-    }
-
+    /* BẢNG TKB */
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #cbd5e1; border-radius: 8px; position: relative; }
+    table { width: 100%; min-width: 620px; border-collapse: separate; border-spacing: 0; }
+    th, td { border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; text-align: center; padding: 5px 3px; height: 48px; vertical-align: middle; font-size: 13px; }
+    th { background-color: #1e3a8a; color: #ffffff; font-weight: 600; position: sticky; top: 0; z-index: 2; }
+    .session-separator { background-color: #f1f5f9; font-weight: bold; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; text-align: left; padding-left: 10px; }
+    .tiet-col { width: 76px; min-width: 76px; background-color: #f8fafc; font-weight: bold; color: #475569; position: sticky; left: 0; z-index: 1; border-right: 2px solid #94a3b8; }
+    th.tiet-col { z-index: 3; background-color: #172554; }
+    .cell-occupied { background-color: #e0f2fe; border: 1px solid #7dd3fc; border-radius: 5px; padding: 3px 2px; margin: 1px 0; }
+    .cell-afternoon { background-color: #fef3c7; border-color: #fcd34d; }
+    .cell-afternoon .cell-subject { color: #b45309; }
+    .cell-subject { font-weight: 700; color: #0369a1; font-size: 12px; }
+    .cell-class { font-size: 11px; font-weight: 600; color: #0f172a; margin-top: 2px; }
+    .hidden-chieu .row-chieu { display: none !important; }
     @media print {
       body { background: white; padding: 0; }
       .container { box-shadow: none; padding: 0; max-width: 100%; }
-      .toolbar, .sub-title { display: none !important; }
+      .toolbar, .sub-title, .admin-panel { display: none !important; }
       .table-responsive { overflow: visible; border: none; }
       table { min-width: 100%; border-collapse: collapse; }
       .tiet-col { position: static; }
       th { background-color: #333 !important; color: white !important; -webkit-print-color-adjust: exact; position: static; }
-      .cell-occupied { border: 1px solid #999 !important; background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
     }
   </style>
 </head>
@@ -216,12 +68,30 @@
 
 <div class="container">
   <h1 id="pageHeading">Thời Khóa Biểu Giảng Dạy</h1>
-  <div class="sub-title">Năm học 2026 - 2027 • Khối 10, 11, 12</div>
+  <div class="sub-title" id="subTitle">Phiên bản v3.1 (Đã phân tách giáo viên trùng tên)</div>
+
+  <div id="adminPanel" class="admin-panel">
+    <h3>⚙️ Bảng Điều Khiển Quản Trị Viên (Cập nhật TKB)</h3>
+    <div style="margin-bottom: 10px; font-size: 13px;">
+      <label>GitHub Token:</label>
+      <input type="password" id="ghToken" placeholder="Dán mã ghp_... vào đây" style="width: 100%; margin-top: 4px; padding: 6px;">
+    </div>
+    <div class="admin-grid">
+      <div class="file-input-group"><label>1. Khối 10 (Sáng):</label><input type="file" id="f_10" accept=".csv"></div>
+      <div class="file-input-group"><label>2. Khối 11 (Sáng):</label><input type="file" id="f_11" accept=".csv"></div>
+      <div class="file-input-group"><label>3. Khối 12 (Sáng):</label><input type="file" id="f_12" accept=".csv"></div>
+      <div class="file-input-group"><label>4. Khối 10 (Chiều):</label><input type="file" id="f_c10" accept=".csv"></div>
+      <div class="file-input-group"><label>5. Khối 11 (Chiều):</label><input type="file" id="f_c11" accept=".csv"></div>
+      <div class="file-input-group"><label>6. Khối 12 (Chiều):</label><input type="file" id="f_c12" accept=".csv"></div>
+    </div>
+    <button class="btn btn-upload-all" id="btnUploadGH" onclick="uploadFilesToGitHub()">🚀 ĐẨY LÊN GITHUB CẬP NHẬT TOÀN TRƯỜNG</button>
+    <div id="uploadStatus" style="margin-top: 8px; font-size: 13px; font-weight: bold;"></div>
+  </div>
 
   <div class="toolbar">
     <div class="control-row">
       <label for="searchInput">🔍 Tìm:</label>
-      <input type="text" id="searchInput" placeholder="Gõ tên để lọc danh sách...">
+      <input type="text" id="searchInput" placeholder="Gõ tên GV (ví dụ: Nga, Hạnh, Thảo)...">
     </div>
 
     <div class="control-row">
@@ -230,6 +100,7 @@
         <option value="">-- Đang nạp danh sách --</option>
       </select>
       <button class="btn btn-toggle" id="toggleChieuBtn" onclick="toggleAfternoon()">Ẩn Chiều</button>
+      <button class="btn btn-admin" onclick="openAdminPrompt()">🔒 Quản lý</button>
       <button class="btn btn-print" onclick="window.print()">🖨️ In</button>
     </div>
 
@@ -255,8 +126,49 @@
 </div>
 
 <script>
-// Dữ liệu 6 file đã tích hợp sẵn
-const rawDataFiles = [
+  const GITHUB_USERNAME = "buiduong2010-hub";
+  const GITHUB_REPO = "tkb";
+  const GITHUB_BRANCH = "main";
+
+  const REPO_FILE_VARIANTS = [
+    ['10.csv', 'tkb_5_9_2026.csv'],
+    ['11.csv', '11tkb_5_9_2026.csv'],
+    ['12.csv', '12tkb_5_9_2026.csv'],
+    ['c10.csv'],
+    ['c11.csv'],
+    ['c12.csv']
+  ];
+
+  const subjectMap = {
+    't': 'Toán', 'toan': 'Toán', 'trn': 'Trải nghiệm', 'gddp': 'GD địa phương',
+    'v': 'Ngữ văn', 'van': 'Ngữ văn', 'a': 'Tiếng Anh', 'ta': 'Tiếng Anh',
+    'anh': 'Tiếng Anh', 'l': 'Vật lý', 'ly': 'Vật lý', 'h': 'Hóa học',
+    'hoa': 'Hóa học', 'sin': 'Sinh học', 'sinh': 'Sinh học', 's': 'Sinh học',
+    'su': 'Lịch sử', 'd': 'Địa lý', 'dia': 'Địa lý', 'ktpl': 'GDKT & PL',
+    'qpan': 'GDQP - AN', 'qp': 'GDQP - AN', 'tin': 'Tin học', 'cn': 'Công nghệ',
+    'gdtc': 'GD Thể chất', 'td': 'Thể dục', 'p': 'Tiếng Pháp', 'n': 'Tiếng Nga',
+    'tq': 'Tiếng Trung', 'sh': 'Sinh hoạt', 'cc': 'Chào cờ'
+  };
+
+  // QUY TẮC CỐ ĐỊNH PHÂN TÁCH GIÁO VIÊN TRÙNG TÊN
+  function resolveTeacherName(rawGvName, rawMonCode) {
+    const name = (rawGvName || '').trim();
+    const mon = (rawMonCode || '').toUpperCase().trim();
+
+    if (name === 'N.P.Nga') {
+      return (mon === 'P') ? 'N.P.Nga (Tiếng Pháp)' : 'N.P.Nga (Ngữ văn)';
+    }
+    if (name === 'N.T.Hạnh') {
+      return (mon === 'TQ') ? 'N.T.Hạnh (Tiếng Trung)' : 'N.T.Hạnh (Ngữ văn)';
+    }
+    if (name === 'V.T.P.Thảo') {
+      return (mon === 'SU') ? 'V.T.P.Thảo (Lịch sử)' : 'V.T.P.Thảo (Hóa học)';
+    }
+    return name;
+  }
+
+  // DỮ LIỆU EMBEDDED DỰ PHÒNG CHUẨN XÁC
+  const EMBEDDED_FILES = [
 `"THỜI KHÓA BIỂU KHỐI 10, NĂM HỌC 2026 - 2027",,,,,,,,,,,,,,,,LẦN 1
 BUỐI SÁNG,,,,,,,,,,,,,,,,
 Áp dụng: Từ ngày 06/9/2026,,,,,,,,,,,,,,,,
@@ -454,28 +366,34 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
 ,2,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao
 ,3,,,,,,,,,,,,,
 ,4,,,,,,,,,,,,,`
-];
-
-  const subjectMap = {
-    't': 'Toán', 'toan': 'Toán', 'trn': 'Trải nghiệm', 'gddp': 'GD địa phương',
-    'v': 'Ngữ văn', 'van': 'Ngữ văn', 'a': 'Tiếng Anh', 'ta': 'Tiếng Anh',
-    'anh': 'Tiếng Anh', 'l': 'Vật lý', 'ly': 'Vật lý', 'h': 'Hóa học',
-    'hoa': 'Hóa học', 'sin': 'Sinh học', 'sinh': 'Sinh học', 's': 'Sinh học',
-    'su': 'Lịch sử', 'd': 'Địa lý', 'dia': 'Địa lý', 'ktpl': 'GDKT & PL',
-    'qpan': 'GDQP - AN', 'qp': 'GDQP - AN', 'tin': 'Tin học', 'cn': 'Công nghệ',
-    'gdtc': 'GD Thể chất', 'td': 'Thể dục', 'p': 'Tiếng Pháp', 'n': 'Tiếng Nga',
-    'tq': 'Tiếng Trung', 'sh': 'Sinh hoạt', 'cc': 'Chào cờ'
-  };
+  ];
 
   let scheduleData = [];
   let allTeachersList = [];
   let hideAfternoonState = false;
 
+  function removeVietnameseTones(str) {
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+    str = str.replace(/Đ/g, "D");
+    return str.toLowerCase().trim();
+  }
+
   function buildEmptyGrid() {
     const tbody = document.getElementById('scheduleBody');
     tbody.innerHTML = '';
 
-    // Buổi Sáng
     const trHeaderSang = document.createElement('tr');
     trHeaderSang.className = 'row-sang';
     trHeaderSang.innerHTML = `<td colspan="7" class="session-separator">☀️ BUỔI SÁNG</td>`;
@@ -492,7 +410,6 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
       tbody.appendChild(tr);
     }
 
-    // Buổi Chiều
     const trHeaderChieu = document.createElement('tr');
     trHeaderChieu.className = 'row-chieu';
     trHeaderChieu.innerHTML = `<td colspan="7" class="session-separator">🌤️ BUỔI CHIỀU</td>`;
@@ -517,14 +434,9 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     let inQuotes = false;
     for (let i = 0; i < textLine.length; i++) {
       const c = textLine[i];
-      if (c === '"') {
-        inQuotes = !inQuotes;
-      } else if (c === ',' && !inQuotes) {
-        res.push(cur.trim());
-        cur = '';
-      } else {
-        cur += c;
-      }
+      if (c === '"') { inQuotes = !inQuotes; }
+      else if (c === ',' && !inQuotes) { res.push(cur.trim()); cur = ''; }
+      else { cur += c; }
     }
     res.push(cur.trim());
     return res;
@@ -538,11 +450,12 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     const parts = clean.split('-');
     const monCode = parts[0].trim();
     const gvName = parts.slice(1).join('-').trim();
-    if (!gvName) return null;
+    if (!gvName || gvName.length < 2 || !isNaN(gvName)) return null;
 
-    const monKey = monCode.toLowerCase();
-    const monName = subjectMap[monKey] || monCode;
-    return { teacher: gvName, subject: monName };
+    const monName = subjectMap[monCode.toLowerCase()] || monCode;
+    const finalTeacherName = resolveTeacherName(gvName, monCode);
+
+    return { teacher: finalTeacherName, subject: monName };
   }
 
   function parseSchoolTKB(csvContent) {
@@ -561,9 +474,7 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     let headerRowIdx = -1;
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      const hasThu = row.some(c => c.toLowerCase().includes('thứ'));
-      const hasTiet = row.some(c => c.toLowerCase().includes('tiết'));
-      if (hasThu && hasTiet) {
+      if (row.some(c => c.toLowerCase().includes('thứ')) && row.some(c => c.toLowerCase().includes('tiết'))) {
         headerRowIdx = i;
         break;
       }
@@ -576,9 +487,7 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     let firstClassColIdx = Math.max(thuColIdx, tietColIdx) + 1;
 
     const buoiColIdx = headerRow.findIndex(c => c.toLowerCase().includes('buổi'));
-    if (buoiColIdx !== -1) {
-      firstClassColIdx = Math.max(firstClassColIdx, buoiColIdx + 1);
-    }
+    if (buoiColIdx !== -1) firstClassColIdx = Math.max(firstClassColIdx, buoiColIdx + 1);
 
     const classNames = [];
     for (let col = firstClassColIdx; col < headerRow.length; col++) {
@@ -625,33 +534,40 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     return records;
   }
 
+  // TÌM KIẾM ĐỒNG BỘ CẢ DROPDOWN VÀ Ô TÌM KIẾM
   function filterTeacherDropdown(keyword = '') {
     const select = document.getElementById('teacherSelect');
     const currentSelected = select.value;
     select.innerHTML = '';
 
-    const normalizedKw = keyword.toLowerCase().trim();
-    const filteredTeachers = allTeachersList.filter(t => t.toLowerCase().includes(normalizedKw));
+    const kwLower = (keyword || '').toLowerCase().trim();
+    const kwNoTone = removeVietnameseTones(kwLower);
 
-    if (filteredTeachers.length === 0) {
+    const filtered = allTeachersList.filter(name => {
+      const nameLower = name.toLowerCase();
+      const nameNoTone = removeVietnameseTones(name);
+      return nameLower.includes(kwLower) || nameNoTone.includes(kwNoTone);
+    });
+
+    if (filtered.length === 0) {
       select.innerHTML = '<option value="">-- Không tìm thấy --</option>';
       renderScheduleForTeacher('');
       return;
     }
 
-    filteredTeachers.forEach(t => {
+    filtered.forEach(t => {
       const opt = document.createElement('option');
       opt.value = t;
       opt.textContent = t;
       select.appendChild(opt);
     });
 
-    if (filteredTeachers.includes(currentSelected)) {
+    if (filtered.includes(currentSelected)) {
       select.value = currentSelected;
       renderScheduleForTeacher(currentSelected);
     } else {
-      select.value = filteredTeachers[0];
-      renderScheduleForTeacher(filteredTeachers[0]);
+      select.value = filtered[0];
+      renderScheduleForTeacher(filtered[0]);
     }
   }
 
@@ -667,12 +583,10 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     const filtered = scheduleData.filter(r => r.teacher === teacherName);
     document.getElementById('totalLessons').textContent = `Tổng số tiết: ${filtered.length}`;
 
-    // Tự động kiểm tra xem GV có tiết chiều hay không
     const hasAfternoonLesson = filtered.some(item => item.isAfternoon);
     const tableContainer = document.getElementById('tableContainer');
     const toggleBtn = document.getElementById('toggleChieuBtn');
 
-    // Nếu không có tiết chiều, tự động ẩn buổi chiều để bảng gọn gàng
     if (!hasAfternoonLesson) {
       hideAfternoonState = true;
       tableContainer.classList.add('hidden-chieu');
@@ -699,7 +613,6 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     });
   }
 
-  // Chức năng bật/tắt thủ công buổi chiều
   function toggleAfternoon() {
     hideAfternoonState = !hideAfternoonState;
     const tableContainer = document.getElementById('tableContainer');
@@ -713,36 +626,182 @@ Thứ 7,1,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,Nâng cao,
     }
   }
 
-  document.getElementById('searchInput').addEventListener('input', function(e) {
-    filterTeacherDropdown(e.target.value);
-  });
-
-  document.getElementById('teacherSelect').addEventListener('change', function(e) {
-    renderScheduleForTeacher(e.target.value);
-  });
-
-  window.onload = function() {
-    buildEmptyGrid();
-
-    let allRecords = [];
-    rawDataFiles.forEach(csvText => {
-      allRecords = allRecords.concat(parseSchoolTKB(csvText));
-    });
-    scheduleData = allRecords;
-
+  // Khởi tạo và cập nhật danh sách giáo viên
+  function rebuildTeacherList() {
     allTeachersList = [...new Set(scheduleData.map(r => r.teacher))]
-      .filter(Boolean)
+      .filter(t => t && t !== '2027')
       .sort((a, b) => a.localeCompare(b, 'vi'));
 
-    filterTeacherDropdown('');
-    
-    // Mặc định chọn B.Đ.Dương
-    const defaultTeacher = allTeachersList.find(t => t.includes('B.Đ.Dương'));
-    if (defaultTeacher) {
-      document.getElementById('teacherSelect').value = defaultTeacher;
-      renderScheduleForTeacher(defaultTeacher);
+    filterTeacherDropdown(document.getElementById('searchInput').value);
+
+    // Mặc định chọn B.Đ.Dương nếu chưa có ai
+    if (!document.getElementById('teacherSelect').value) {
+      const defaultTeacher = allTeachersList.find(t => t.includes('B.Đ.Dương')) || allTeachersList[0];
+      if (defaultTeacher) {
+        document.getElementById('teacherSelect').value = defaultTeacher;
+        renderScheduleForTeacher(defaultTeacher);
+      }
     }
-  };
+  }
+
+  // Khởi tạo ngay lập tức không phụ thuộc mạng
+  function initSynchronously() {
+    let embeddedRecords = [];
+    EMBEDDED_FILES.forEach(csvText => {
+      embeddedRecords = embeddedRecords.concat(parseSchoolTKB(csvText));
+    });
+    scheduleData = embeddedRecords;
+    rebuildTeacherList();
+  }
+
+  // Nạp cập nhật từ GitHub nếu có
+  async function checkAndUpdateFromGitHub() {
+    let loadedRecords = [];
+    let count = 0;
+
+    for (const fileGroup of REPO_FILE_VARIANTS) {
+      for (const fileName of fileGroup) {
+        try {
+          const response = await fetch(`${fileName}?_t=${Date.now()}`);
+          if (response.ok) {
+            const text = await response.text();
+            const records = parseSchoolTKB(text);
+            if (records.length > 0) {
+              loadedRecords = loadedRecords.concat(records);
+              count++;
+              break;
+            }
+          }
+        } catch (e) {}
+      }
+    }
+
+    if (loadedRecords.length > 0) {
+      scheduleData = loadedRecords;
+      document.getElementById('subTitle').textContent = `Phiên bản v3.1 (Đã đồng bộ ${count} file trực tiếp từ GitHub)`;
+      rebuildTeacherList();
+    }
+  }
+
+  function openAdminPrompt() {
+    const adminPanel = document.getElementById('adminPanel');
+    if (adminPanel.style.display === 'block') {
+      adminPanel.style.display = 'none';
+      return;
+    }
+    const pwd = prompt("Nhập mật mã quản trị:");
+    if (pwd === "123456") {
+      adminPanel.style.display = 'block';
+      const savedToken = localStorage.getItem('gh_tkb_token');
+      if (savedToken) document.getElementById('ghToken').value = savedToken;
+    } else if (pwd !== null) {
+      alert("Sai mật mã!");
+    }
+  }
+
+  async function uploadSingleFileToGitHub(token, path, contentBase64) {
+    const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${path}`;
+    let sha = null;
+    try {
+      const getRes = await fetch(url, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (getRes.ok) {
+        const data = await getRes.json();
+        sha = data.sha;
+      }
+    } catch (e) {}
+
+    const bodyData = {
+      message: `Cập nhật ${path} từ Web Admin`,
+      content: contentBase64,
+      branch: GITHUB_BRANCH
+    };
+    if (sha) bodyData.sha = sha;
+
+    const putRes = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(bodyData)
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || "Lỗi tải file");
+    }
+  }
+
+  function fileToBase64UTF8(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const binaryString = reader.result;
+        const base64 = btoa(unescape(encodeURIComponent(binaryString)));
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsText(file, 'UTF-8');
+    });
+  }
+
+  async function uploadFilesToGitHub() {
+    const token = document.getElementById('ghToken').value.trim();
+    const statusBox = document.getElementById('uploadStatus');
+    if (!token) {
+      alert("Vui lòng nhập GitHub Token!");
+      return;
+    }
+    localStorage.setItem('gh_tkb_token', token);
+
+    const fileMap = {
+      '10.csv': document.getElementById('f_10').files[0],
+      '11.csv': document.getElementById('f_11').files[0],
+      '12.csv': document.getElementById('f_12').files[0],
+      'c10.csv': document.getElementById('f_c10').files[0],
+      'c11.csv': document.getElementById('f_c11').files[0],
+      'c12.csv': document.getElementById('f_c12').files[0]
+    };
+
+    const filesToUpload = Object.entries(fileMap).filter(([_, file]) => file != null);
+    if (filesToUpload.length === 0) {
+      alert("Bạn chưa chọn file nào để cập nhật!");
+      return;
+    }
+
+    statusBox.style.color = '#d97706';
+    statusBox.textContent = `Đang xử lý tải lên 0/${filesToUpload.length}...`;
+
+    let successCount = 0;
+    try {
+      for (const [targetName, fileObj] of filesToUpload) {
+        statusBox.textContent = `Đang đẩy file ${targetName} lên GitHub...`;
+        const base64Content = await fileToBase64UTF8(fileObj);
+        await uploadSingleFileToGitHub(token, targetName, base64Content);
+        successCount++;
+        statusBox.textContent = `Đã cập nhật ${successCount}/${filesToUpload.length}...`;
+      }
+
+      statusBox.style.color = '#16a34a';
+      statusBox.textContent = `✓ Đã cập nhật thành công ${successCount} file lên GitHub! Đang nạp lại trang...`;
+      setTimeout(() => { location.reload(); }, 1500);
+
+    } catch (err) {
+      statusBox.style.color = '#dc2626';
+      statusBox.textContent = `❌ Lỗi: ${err.message}`;
+    }
+  }
+
+  document.getElementById('searchInput').addEventListener('input', (e) => filterTeacherDropdown(e.target.value));
+  document.getElementById('teacherSelect').addEventListener('change', (e) => renderScheduleForTeacher(e.target.value));
+
+  // Chạy ngay lập tức khi nạp trang
+  buildEmptyGrid();
+  initSynchronously();
+  window.onload = checkAndUpdateFromGitHub;
 </script>
 
 </body>
